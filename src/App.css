@@ -1,0 +1,299 @@
+* {
+    color: #333;
+}
+
+ul {
+    padding: 0;
+    margin: 0;
+    list-style: none;
+}
+
+.main {
+    width: 100%;
+}
+
+.side-bar {
+    width: 15rem;
+    height: 100vh;
+    background: #222;
+    color: #fff;
+    position: fixed;
+    top: 0;
+    left: 0;
+}
+
+.item {
+    display: block;
+    padding: 1rem;
+    line-height: 1rem;
+    box-sizing: border-box;
+    color: #fff;
+}
+
+.active-item {
+    background: #3a3a3a;
+}
+
+a {
+    color: inherit;
+    text-decoration: none;
+    cursor: pointer;
+}
+
+.content {
+    margin-left: 15rem;
+    overflow-x: hidden;
+    position: relative;
+}
+
+.content-header {
+    height: 3rem;
+    line-height: 3rem;
+    padding: 0 2rem;
+    box-sizing: border-box;
+    background: #3a3a3a;
+    color: #fff;
+    position: fixed;
+    z-index: 2;
+    right: 0;
+    top: 0;
+    left: 15rem;
+}
+
+.route-content {
+    margin-top: 3rem;
+    padding: 2rem;
+    /* animation: fadeInFromRight .3s; */
+}
+
+.log-out {
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    width: 100%;
+    padding: 1rem;
+    box-sizing: border-box;
+    color: #fff;
+}
+
+@keyframes fadeInFromRight {
+    from {
+        transform: translate(20px, 0);
+        opacity: 0
+    }
+    to {
+        transform: translate(0, 0);
+        opacity: 1;
+    }
+}
+
+.list-wrapper {
+    width: 100%;
+}
+
+.list-wrapper-item {
+    padding: 0.5rem;
+    line-height: 1.5rem;
+    display: flex;
+    flex-direction: row;
+    cursor: auto;
+}
+
+.flex-item {
+    flex: 1;
+    text-align: center;
+}
+
+.list-wrapper-item:nth-of-type(2n + 1) {
+    background: #ccc;
+}
+
+.list-title-bar {
+    display: flex;
+    padding: .5rem;
+}
+
+.loading {
+    width: 100%;
+    height: 25rem;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.see-encash {
+    color: blue;
+    cursor: pointer;
+}
+
+.record-list-wrapper {
+    position: fixed;
+    top: 0;
+    left: 0;
+    z-index: 2;
+    background: rgba(0, 0, 0, .4);
+    width: 100vw;
+    height: 100vh;
+    /* animation: fadeIn .3s; */
+}
+
+.record-list-inner {
+    position: absolute;
+    top: 5%;
+    left: 10%;
+    bottom: 5%;
+    right: 10%;
+    overflow-y: scroll;
+    background: #fff;
+    box-sizing: border-box;
+    padding: 2rem;
+    /* animation: fromBottomToTop .3s; */
+}
+
+@keyframes fromBottomToTop {
+    from {
+        transform: translate(0, 40px);
+        opacity: 0;
+    }
+    to {
+        transform: translate(0, 0);
+        opacity: 1;
+    }
+}
+
+@keyframes fadeIn {
+    from {
+        background: rgba(0, 0, 0, 0);
+    }
+    to {
+        background: rgba(0, 0, 0, .4);
+    }
+}
+
+.record-list-wrapper-before-leave {
+    position: fixed;
+    top: 0;
+    left: 0;
+    z-index: 2;
+    background: rgba(0, 0, 0, 0);
+    width: 100vw;
+    height: 100vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    animation: fadeOut .3s;
+    overflow: hidden;
+    opacity: 0;
+}
+
+.record-list-inner-before-leave {
+    position: absolute;
+    transform: translate(0, 40px);
+    top: 2rem;
+    left: 8rem;
+    right: 8rem;
+    bottom: 2rem;
+    background: #fff;
+    animation: fromTopToBottom .3s;
+    box-sizing: border-box;
+    padding: 2rem;
+    overflow-y: scroll;
+}
+
+@keyframes fromTopToBottom {
+    from {
+        transform: translate(0, 0);
+    }
+    to {
+        transform: translate(0, 40px);
+    }
+}
+
+@keyframes fadeOut {
+    from {
+        background: rgba(0, 0, 0, .4);
+        opacity: 1;
+    }
+    to {
+        background: rgba(0, 0, 0, 0);
+        opacity: 0;
+    }
+}
+
+.switch-page-bar {
+    padding: 1rem 2rem;
+    box-sizing: border-box;
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+}
+
+.go-next-pre-page {
+    width: 5rem;
+    text-align: center;
+}
+
+span {
+    display: inline-block;
+}
+
+select {
+    font-family: inherit;
+}
+
+.review-file-wrapper {
+    position: fixed;
+    height: 100vh;
+    width: 100vw;
+    top: 0;
+    left: 0;
+    background: rgba(0, 0, 0, .4);
+    z-index: 2;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.review-file {
+    width: 80vw;
+    height: 90vh;
+    background: #ffffff;
+    padding: 2rem;
+    box-sizing: border-box;
+}
+
+.product-wrapper {
+    display: flex;
+    flex-direction: row;
+    box-sizing: border-box;
+    padding: .5rem;
+    border-bottom: 1px solid #ccc;
+}
+
+.product-wrapper>img {
+    height: 10rem;
+}
+
+.product-info {
+    margin-left: 1rem;
+    flex: 1;
+}
+
+.product-title {
+    line-height: 1.6rem;
+    font-weight: bold;
+}
+
+.product-detail-wrapper {
+    display: flex;
+    flex-direction: row;
+}
+
+.product-detail {
+    flex: 1;
+}
+
+.product-operation {
+    width: 8rem;
+    flex: none;
+}
