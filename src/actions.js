@@ -5,13 +5,13 @@ export const UserConsts = {
     USER_PAGE_CHANGE: 'USER_PAGE_CHANGE',
     USER_CLEAR: 'USER_CLEAR'
 }
-export function pushUserDataToStore(data) {
+export function userData(data) {
     return {
         type: UserConsts.PUSH_USER_DATA,
         data
     }
 }
-export function pushUserPageToStore(totalPage) {
+export function userPage(totalPage) {
     return {
         type: UserConsts.PUSH_USER_PAGE,
         totalPage

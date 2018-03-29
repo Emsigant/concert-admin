@@ -34,6 +34,10 @@ ul {
     background: #3a3a3a;
 }
 
+a:active{
+    text-decoration: none;
+}
+
 a {
     color: inherit;
     text-decoration: none;
@@ -296,4 +300,9 @@ select {
 .product-operation {
     width: 8rem;
     flex: none;
+}
+
+/* addon style */
+.route {
+    padding: 1rem;
 }

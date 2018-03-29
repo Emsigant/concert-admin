@@ -1,15 +1,19 @@
-const fakeUserData = [];
-let cityArr = ['北京','上海','广州','深圳','天津','成都','杭州','南京', '武汉','大连','青岛'];
-let cityLen = cityArr.length;
-for (let i = 0; i < 10; i++) {
-    let random = ~~(Math.random()*cityLen);
-    fakeUserData.push({
-        userId: '100000' + (i < 10 ? '0' : '') + i,
-        username: 'user' + i,
-        number: '123-456-7890',
-        city: cityArr[random],
-        country: '中国'
-    })
+export function fakeFetchUserData(start = 0, end = 10) {
+    let arr = [];
+    let cityArr = ['北京', '上海', '广州', '深圳', '天津', '重庆', '成都', '杭州', '南京', '武汉', '西安', '大连', '青岛'];
+    let cityLen = cityArr.length;
+    for (let i = start; i < end; i++) {
+        let random = ~~(Math.random() * cityLen);
+        arr.push({
+            key: 'user-' + '100000' + (i < 10 ? '0' : '') + i,
+            userId: '100000' + (i < 10 ? '0' : '') + i,
+            username: 'user' + i,
+            phoneNumber: '123-456-7890',
+            city: cityArr[random],
+            country: '中国'
+        })
+    }
+    return arr;
 }
 
 const fakeOrderData = [];
@@ -42,22 +46,19 @@ const fakeBusinessData = [];
 for (let i = 0; i < 10; i++) {
     fakeBusinessData.push({
         businessId: '10000000000' + (i < 10 ? '0' + i : i),
-        businessReviewStatus: ['失败','通过','审核中'][i % 3],
+        businessReviewStatus: ['失败', '通过', '审核中'][i % 3],
         reveiwStatusCode: i % 3,
         businessName: '商家' + i,
-        businessEncashAccount: ~~(Math.random()*1000000),
+        businessEncashAccount: ~~(Math.random() * 1000000),
         businessEncashAccountName: 'account-name',
-        businessEncashRecords: fakeEncashData.map(item => ({...item, encashStarterId:'10000000000' + (i < 10 ? '0' + i : i)})),
+        businessEncashRecords: fakeEncashData.map(item => ({ ...item,
+            encashStarterId: '10000000000' + (i < 10 ? '0' + i : i)
+        })),
         businessReviewFile: 'review file'
     })
 }
 
 const fakeProductData = [];
-for(let i = 0; i<10;i++) {
+for (let i = 0; i < 10; i++) {
     fakeProductData.push(i);
 }
-
-module.exports.fakeUserData = fakeUserData;
-module.exports.fakeOrderData = fakeOrderData;
-module.exports.fakeBusinessData = fakeBusinessData;
-module.exports.fakeProductData = fakeProductData;
