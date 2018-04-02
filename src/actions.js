@@ -11,6 +11,13 @@ export function userData(data) {
         data
     }
 }
+export function fetchUserData(data, timeout = 500) {
+    return (dispatch, getState) => {
+        setTimeout(() => {
+            dispatch(userData(data));
+        }, timeout);
+    }
+}
 export function userPage(totalPage) {
     return {
         type: UserConsts.PUSH_USER_PAGE,
@@ -23,7 +30,7 @@ export function userPageChange(step) {
         step
     }
 }
-export function UserClear() {
+export function userClear() {
     return {
         type: UserConsts.USER_CLEAR
     }
@@ -40,6 +47,13 @@ export function orderData(data) {
     return {
         type: OrderConsts.ORDER_DATA,
         data
+    }
+}
+export function fetchOrderData(data, timeout=500) {
+    return (dispatch, getState) => {
+        setTimeout(() => {
+            dispatch(orderData(data));
+        }, timeout);
     }
 }
 export function orderPage(totalPage) {
@@ -73,6 +87,13 @@ export function businessData(data) {
         data
     }
 }
+export function fetchBusinessData(data, timeout=500) {
+    return (dispatch, getState) => {
+        setTimeout(() => {
+            dispatch(businessData(data));
+        }, timeout);
+    }
+}
 export function businessPage(totalPage) {
     return {
         type: BusinessConsts.BUSINESS_PAGE,
@@ -102,6 +123,13 @@ export function productData(data) {
     return {
         type: ProductConsts.PRODUCT_DATA,
         data
+    }
+}
+export function fetchProductData(data, timeout=500) {
+    return (dispatch, getState) => {
+        setTimeout(() => {
+            dispatch(productData(data));
+        }, timeout);
     }
 }
 export function productPage(totalPage) {

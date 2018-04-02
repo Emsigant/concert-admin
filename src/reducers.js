@@ -129,7 +129,7 @@ function Business(state, action) {
             {
                 return {
                     page: 1,
-                    totalPage: 15,
+                    totalPage: 30,
                     data: [],
                     encashRecords: []
                 }

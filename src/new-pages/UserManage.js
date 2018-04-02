@@ -1,51 +1,34 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
-import { Table, Pagination } from 'antd';
+import { Table } from 'antd';
 
 import { fakeFetchUserData } from '../data';
-import { userData, userPageChange } from '../actions';
+import { userPageChange, userClear, fetchUserData } from '../actions';
 
 const columns = [
-    { title: 'UserId', dataIndex: 'userId', key: 'userId' },
-    { title: 'Username', dataIndex: 'username', key: 'username' },
-    { title: 'Phone Number', dataIndex: 'phoneNumber', key: 'phoneNumber' },
-    { title: 'City', dataIndex: 'city', key: 'city' },
-    { title: 'Country', dataIndex: 'country', key: 'country' }
+    { title: '用户ID', dataIndex: 'userId', key: 'userId' },
+    { title: '用户昵称', dataIndex: 'username', key: 'username' },
+    { title: '电话号', dataIndex: 'phoneNumber', key: 'phoneNumber' },
+    { title: '城市', dataIndex: 'city', key: 'city' },
+    { title: '国家', dataIndex: 'country', key: 'country' }
 ];
 
 class UserManage extends Component {
-    constructor(props) {
-        super(props);
-        this.state = {
-            tableLoading: true
-        }
-    }
     componentDidMount() {
-        setTimeout(() => {
-            this.props.dispatch(userData(fakeFetchUserData()));
-            this.setState({
-                tableLoading: false
-            })
-        }, 500);  
+        this.props.dispatch(fetchUserData(fakeFetchUserData()));
+    }
+    componentWillUnmount() {
+        this.props.dispatch(userClear());
     }
     render() {
         const { data, page, totalPage, dispatch } = this.props;
-        const { tableLoading } = this.state;
-        const thisComponent = this;
         const paginationOptions = {
             current: page,
             defaultCurrent: 1,
             onChange(targetPage, pageSize) {
                 dispatch(userPageChange(targetPage - page));
-                thisComponent.setState({
-                    tableLoading: true
-                });
-                setTimeout(() => {
-                    dispatch(userData(fakeFetchUserData((targetPage-1)*10, targetPage*10)));
-                    thisComponent.setState({
-                        tableLoading: false
-                    });
-                }, 500);
+                dispatch(userClear());
+                dispatch(fetchUserData(fakeFetchUserData((targetPage-1)*10, targetPage*10)));
             },
             total: (totalPage * 10),
             pageSize: 10,
@@ -57,7 +40,7 @@ class UserManage extends Component {
                     columns={columns}
                     dataSource={data}
                     bordered
-                    loading={tableLoading}
+                    loading={data.length === 0}
                     pagination={paginationOptions}
                 />
             </div>

@@ -1,19 +1,23 @@
 import React, { Component } from 'react';
 import { HashRouter, Route, NavLink, Switch } from 'react-router-dom';
-import './App.css';
 import { Provider } from 'react-redux';
-import { createStore } from 'redux'
-import reducers from './reducers';
+import { createStore, applyMiddleware } from 'redux';
+import thunk from 'redux-thunk';
 import { LocaleProvider } from 'antd';
-import zh_CN from 'antd/lib/locale-provider/zh_CN';
-import 'antd/dist/antd.css';
 import moment from 'moment';
+
+import zh_CN from 'antd/lib/locale-provider/zh_CN';
 import 'moment/locale/zh-cn';
+import './App.css';
+import 'antd/dist/antd.css';
+
+import reducers from './reducers';
 
 // new pages
 import Welcome from './new-pages/Welcome';
 import UserManage from './new-pages/UserManage';
-
+import OrderManage from './new-pages/OrderManage';
+import BusinessManage from './new-pages/BusinessManage';
 // abandoned pages
 // import User from './pages/user';
 // import Order from './pages/order';
@@ -22,7 +26,7 @@ import UserManage from './new-pages/UserManage';
 
 moment.locale('zh_cn');
 
-let store = createStore(reducers);
+let store = createStore(reducers, applyMiddleware(thunk));
 
 class App extends Component {
   constructor(p) {
@@ -33,10 +37,10 @@ class App extends Component {
           id: 0, text: '欢迎', to: '/', path: '/',
           c: Welcome
         },
-        { id: 1, text: '用户管理', to: '/user', path: '/user', c: UserManage }
-        // { id: 2, text: '订单管理', to: '/order', path: '/order', c: Order },
+        { id: 1, text: '用户管理', to: '/user', path: '/user', c: UserManage },
+        { id: 2, text: '订单管理', to: '/order', path: '/order', c: OrderManage },
         // { id: 3, text: '商品管理', to: '/product', path: '/product', c: Product },
-        // { id: 4, text: '商家管理', to: '/business', path: '/business', c: Business }
+        { id: 4, text: '商家管理', to: '/business', path: '/business', c: BusinessManage }
       ],
       p: {
         key1: 1,
