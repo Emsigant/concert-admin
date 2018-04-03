@@ -19,6 +19,7 @@ import UserManage from './new-pages/UserManage';
 import OrderManage from './new-pages/OrderManage';
 import BusinessManage from './new-pages/BusinessManage';
 import ProductManage from './new-pages/ProductManange';
+import AccountManage from './new-pages/AccountManange';
 // abandoned pages
 // import User from './pages/user';
 // import Order from './pages/order';
@@ -34,20 +35,13 @@ class App extends Component {
     super(p);
     this.state = {
       itemList: [
-        {
-          id: 0, text: '欢迎', to: '/', path: '/',
-          c: Welcome
-        },
+        { id: 0, text: '欢迎', to: '/', path: '/', c: Welcome },
         { id: 1, text: '用户管理', to: '/user', path: '/user', c: UserManage },
         { id: 2, text: '订单管理', to: '/order', path: '/order', c: OrderManage },
         { id: 3, text: '商品管理', to: '/product', path: '/product', c: ProductManage },
-        { id: 4, text: '商家管理', to: '/business', path: '/business', c: BusinessManage }
-      ],
-      p: {
-        key1: 1,
-        key2: 2,
-        key3: 3
-      }
+        { id: 4, text: '商家管理', to: '/business', path: '/business', c: BusinessManage },
+        { id: 5, text: '账号管理', to: '/account', path: '/account', c: AccountManage }
+      ]
     };
   }
   render() {

@@ -24,9 +24,14 @@ class ProductManage extends Component {
                         title:'详细信息',
                         content: (
                             <div>
-                                {record.productId}
-                                <br/>
-                                {JSON.stringify(record.productDetail)}
+                                { record.productId }
+                                {
+                                    Object.keys(record.productDetail).map(item => (
+                                        <div key={'product-detail-'+item}>
+                                            {item}:{' '}{record.productDetail[item]}
+                                        </div>
+                                    ))
+                                }
                             </div>
                         )
                     })
