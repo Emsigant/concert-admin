@@ -172,7 +172,7 @@ function Product(state, action) {
             {
                 return {
                     page: 1,
-                    totalPage: 30,
+                    totalPage: 10,
                     data: []
                 }
             }

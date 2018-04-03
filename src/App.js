@@ -18,6 +18,7 @@ import Welcome from './new-pages/Welcome';
 import UserManage from './new-pages/UserManage';
 import OrderManage from './new-pages/OrderManage';
 import BusinessManage from './new-pages/BusinessManage';
+import ProductManage from './new-pages/ProductManange';
 // abandoned pages
 // import User from './pages/user';
 // import Order from './pages/order';
@@ -39,7 +40,7 @@ class App extends Component {
         },
         { id: 1, text: '用户管理', to: '/user', path: '/user', c: UserManage },
         { id: 2, text: '订单管理', to: '/order', path: '/order', c: OrderManage },
-        // { id: 3, text: '商品管理', to: '/product', path: '/product', c: Product },
+        { id: 3, text: '商品管理', to: '/product', path: '/product', c: ProductManage },
         { id: 4, text: '商家管理', to: '/business', path: '/business', c: BusinessManage }
       ],
       p: {

@@ -5,7 +5,7 @@ export function fakeFetchUserData(start = 0, end = 10) {
     for (let i = start; i < end; i++) {
         let random = ~~(Math.random() * cityLen);
         arr.push({
-            key: 'user-' + '100000' + (i < 10 ? '0' : '') + i,
+            key: ['user-', ('100000' + (i < 10 ? '0' : '') + i)].join(''),
             userId: '100000' + (i < 10 ? '0' : '') + i,
             username: 'user' + i,
             phoneNumber: '12345678901',
@@ -20,7 +20,7 @@ export function fakeFetchOrderData(start = 0, end = 10) {
     let fakeOrderData = [];
     for (let i = start; i < end; i++) {
         fakeOrderData.push({
-            key: 'order-' + i,
+            key: ['order-', i].join(''),
             productName: '演出' + (Math.random() * 10).toFixed(0),
             orderId: '100000' + (i < 10 ? '0' : '') + i,
             time: '2018-03-20',
@@ -36,7 +36,7 @@ export function fakeFetchOrderData(start = 0, end = 10) {
 const fakeEncashData = [];
 for (let i = 0; i < 30; i++) {
     fakeEncashData.push({
-        key: 'encash-record-' + '10000' + (i < 10 ? '0' + i : i),
+        key: ['encash-record-', ('10000' + (i < 10 ? '0' + i : i))].join(''),
         encashId: '10000' + (i < 10 ? '0' + i : i),
         encashStartTime: '2018-03-21',
         encashStarterId: '1000000001',
@@ -51,7 +51,7 @@ export function fakeFetchBusinessData(start = 0, end = 10) {
     let fakeBusinessData = [];
     for (let i = start; i < end; i++) {
         fakeBusinessData.push({
-            key: 'business-' + '10000000000' + (i < 10 ? '0' + i : i),
+            key: ['business-', ('10000000000' + (i < 10 ? '0' + i : i))].join(''),
             businessId: '10000000000' + (i < 10 ? '0' + i : i),
             businessReviewStatus: ['失败', '通过', '审核中'][i % 3],
             reveiwStatusCode: i % 3,
@@ -66,4 +66,29 @@ export function fakeFetchBusinessData(start = 0, end = 10) {
         })
     }
     return fakeBusinessData;
+}
+
+export function fakeFetchProductData(start = 0, end = 10) {
+    let fakeArr = [];
+    for (let i = start; i < end; i++) {
+        fakeArr.push({
+            key: ['product-', i].join(''),
+            productId: ['100000', i].join(''),
+            productTitle: ['product', i].join(''),
+            productPriceRange: '50-100',
+            productDetail: {
+                ticketType: [1, 2, 3].map(item => ('type-' + item)),
+                ticketPrice: [50, 75, 100],
+                ticketAmount: 100,
+                introduction: 'an introduction',
+                time: '2018-04-03'
+            },
+            productDiscountInfo: 8,
+            productOriginBusiness: 'a-business',
+            productStatus: '0|1|2',
+            productIsHighlight: false,
+            prodcutIsRecommendation: false
+        })
+    }
+    return fakeArr;
 }
