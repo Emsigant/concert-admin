@@ -1,8 +1,13 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
-import { Button, Icon, Modal, Input, message, Form } from 'antd';
+import { Button, Icon, Modal, Input, message, Form, Table } from 'antd';
+
+import { fetchAdminData, adminClear, adminPageChange } from '../actions';
+import { fakeAdminData } from '../data';
+
 const FormItem = Form.Item;
 
+// add-new-from start
 function hasErrors(fieldsError) {
     return Object.keys(fieldsError).some(field => fieldsError[field]);
 }
@@ -50,7 +55,7 @@ class AddNewForm extends Component {
                     {getFieldDecorator('password', {
                         rules: [{ required: true, message: '请输入密码' }],
                     })(
-                        <Input prefix={<Icon type="lock" />} type="password" placeholder="新密码" />
+                        <Input prefix={<Icon type="lock" />} type="text" placeholder="新密码" />
                     )}
                 </FormItem>
                 <Button
@@ -66,6 +71,7 @@ class AddNewForm extends Component {
     }
 }
 const WrappedAddNewForm = Form.create()(AddNewForm);
+// add-new-from end
 
 class AccountManage extends Component {
     constructor(props) {
@@ -73,6 +79,12 @@ class AccountManage extends Component {
         this.state = {
             showAddForm: false
         }
+    }
+    componentDidMount() {
+        this.props.dispatch(fetchAdminData(fakeAdminData()));
+    }
+    componentWillUnmount() {
+        this.props.dispatch(adminClear());
     }
     submitNewAccount(data) {
         // submit new account here
@@ -98,6 +110,24 @@ class AccountManage extends Component {
     }
     render() {
         const { showAddForm } = this.state;
+        const { data, page, totalPage, dispatch } = this.props;
+        const columns = [
+            { title:'管理员ID', key: 'adminId', dataIndex: 'adminId' },
+            { title:'管理员账号', key: 'adminAccount', dataIndex: 'adminAccount' },
+            { title:'操作', key: 'operation', render: () => ( <a style={{color:'red'}}>注销</a> ) }
+        ];
+        const pagination = {
+            current: page,
+			defaultCurrent: 1,
+			onChange(targetPage, pageSize) {
+				dispatch(adminPageChange(targetPage - page));
+				dispatch(adminClear());
+				dispatch(fetchAdminData(fakeAdminData((targetPage - 1) * 10, targetPage * 10)));
+			},
+			total: (totalPage * 10),
+			pageSize: 10,
+			showQuickJumper: true
+        }
         return (
             <div className="route">
                 <div className="fixed-header-bar">
@@ -119,11 +149,25 @@ class AccountManage extends Component {
                     </Modal>
                 </div>
                 <div style={{ marginTop: '4rem' }}>
-                    emmmm
+                    <Table
+                        columns={columns}
+                        dataSource={data}
+                        bordered
+                        loading={data.length === 0}
+                        pagination={pagination}
+                    />
                 </div>
             </div>
         )
     }
 }
 
-export default AccountManage;
+let mapStateToProps = state => {
+	return {
+		data: state.Admin.data,
+		page: state.Admin.page,
+		totalPage: state.Admin.totalPage
+	}
+}
+
+export default connect(mapStateToProps)(AccountManage);

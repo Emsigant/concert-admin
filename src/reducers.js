@@ -5,7 +5,8 @@ import {
     UserConsts,
     OrderConsts,
     BusinessConsts,
-    ProductConsts
+    ProductConsts,
+    AdminConsts
 } from './actions'
 
 // 重构的User模块
@@ -179,10 +180,53 @@ function Product(state, action) {
     }
 }
 
+function Admin(state, action) {
+    switch (action.type) {
+        case AdminConsts.ADMIN_DATA:
+            {
+                return {
+                    ...state,
+                    data: action.data
+                }
+            }
+        case AdminConsts.ADMIN_PAGE:
+            {
+                return {
+                    ...state,
+                    totalPage: action.totalPage
+                }
+            }
+        case AdminConsts.ADMIN_PAGE_CHANGE:
+            {
+                let page = state.page + action.step;
+                return {
+                    ...state,
+                    page
+                }
+            }
+        case AdminConsts.ADMIN_CLEAR:
+            {
+                return {
+                    ...state,
+                    data: []
+                }
+            }
+        default:
+            {
+                return {
+                    data: [],
+                    totalPage: 5,
+                    page: 1
+                }
+            }
+    }
+}
+
 const reducers = combineReducers({
     User,
     Order,
     Business,
-    Product
+    Product,
+    Admin
 });
 export default reducers;

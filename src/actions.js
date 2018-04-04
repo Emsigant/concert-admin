@@ -149,3 +149,41 @@ export function productClear() {
         type: ProductConsts.PRODUCT_CLEAR
     }
 }
+
+// admin manage module
+export const AdminConsts = {
+    ADMIN_DATA:"ADMIN_DATA",
+    ADMIN_PAGE:"ADMIN_PAGE",
+    ADMIN_PAGE_CHANGE:"ADMIN_PAGE_CHANGE",
+    ADMIN_CLEAR:"ADMIN_CLEAR"
+}
+export function adminData(data) {
+    return {
+        type: AdminConsts.ADMIN_DATA,
+        data
+    }
+}
+export function fetchAdminData(data, timeout = 500) {
+    return (dispatch, getState) => {
+        setTimeout(() => {
+            dispatch(adminData(data))
+        }, timeout);
+    }
+}
+export function adminPage(totalPage) {
+    return {
+        type: AdminConsts.ADMIN_PAGE,
+        totalPage
+    }
+}
+export function adminPageChange(step) {
+    return {
+        type: AdminConsts.ADMIN_PAGE_CHANGE,
+        step
+    }
+}
+export function adminClear() {
+    return {
+        type: AdminConsts.ADMIN_CLEAR
+    }
+}

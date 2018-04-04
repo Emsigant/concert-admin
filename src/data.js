@@ -92,3 +92,16 @@ export function fakeFetchProductData(start = 0, end = 10) {
     }
     return fakeArr;
 }
+
+export function fakeAdminData(start = 0, end = 10) {
+    let arr = [];
+    for(let i = start; i < end; i++) {
+        arr.push({
+            key:`admin-${i}`,
+            adminId: i,
+            adminAccount: `admin-${i}`,
+            adminStatus:'0|1' // active or disabled
+        })
+    }
+    return arr;
+}
