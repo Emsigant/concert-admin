@@ -264,18 +264,20 @@ function Admin(state, action) {
                     showFormLoading: false
                 }
             }
-        case AdminConsts.ADMIN_SHOW_FORM:{
-            return {
-                ...state,
-                showForm: true
+        case AdminConsts.ADMIN_SHOW_FORM:
+            {
+                return {
+                    ...state,
+                    showForm: true
+                }
             }
-        }
-        case AdminConsts.ADMIN_CLOSE_FORM:{
-            return {
-                ...state,
-                showForm: false
+        case AdminConsts.ADMIN_CLOSE_FORM:
+            {
+                return {
+                    ...state,
+                    showForm: false
+                }
             }
-        }
         default:
             {
                 return {

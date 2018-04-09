@@ -91,28 +91,30 @@ class AccountManage extends Component {
     render() {
         const { data, page, totalPage, dispatch, showFormLoading, showForm } = this.props;
         const columns = [
-            { title:'管理员ID', key: 'adminId', dataIndex: 'adminId' },
-            { title:'管理员账号', key: 'adminAccount', dataIndex: 'adminAccount' },
-            { title:'操作', key: 'operation', render: (text, record) => (
-                <Button
-                    type='danger'
-                    onClick={() => {this.logOutAccount(record.adminId)}}
-                    loading={record.loading}
-                    disabled={record.disabled}
-                >注销</Button>
-            ) }
+            { title: '管理员ID', key: 'adminId', dataIndex: 'adminId' },
+            { title: '管理员账号', key: 'adminAccount', dataIndex: 'adminAccount' },
+            {
+                title: '操作', key: 'operation', render: (text, record) => (
+                    <Button
+                        type='danger'
+                        onClick={() => { this.logOutAccount(record.adminId) }}
+                        loading={record.loading}
+                        disabled={record.disabled}
+                    >注销</Button>
+                )
+            }
         ];
         const pagination = {
             current: page,
-			defaultCurrent: 1,
-			onChange(targetPage, pageSize) {
-				dispatch(adminPageChange(targetPage - page));
-				dispatch(adminClear());
-				dispatch(fetchAdminData(fakeAdminData((targetPage - 1) * 10, targetPage * 10)));
-			},
-			total: (totalPage * 10),
-			pageSize: 10,
-			showQuickJumper: true
+            defaultCurrent: 1,
+            onChange(targetPage, pageSize) {
+                dispatch(adminPageChange(targetPage - page));
+                dispatch(adminClear());
+                dispatch(fetchAdminData(fakeAdminData((targetPage - 1) * 10, targetPage * 10)));
+            },
+            total: (totalPage * 10),
+            pageSize: 10,
+            showQuickJumper: true
         }
         return (
             <div className="route">
@@ -150,13 +152,13 @@ class AccountManage extends Component {
 }
 
 let mapStateToProps = state => {
-	return {
-		data: state.Admin.data,
-		page: state.Admin.page,
+    return {
+        data: state.Admin.data,
+        page: state.Admin.page,
         totalPage: state.Admin.totalPage,
         showFormLoading: state.Admin.showFormLoading,
         showForm: state.Admin.showForm
-	}
+    }
 }
 
 export default connect(mapStateToProps)(AccountManage);

@@ -49,7 +49,7 @@ export function orderData(data) {
         data
     }
 }
-export function fetchOrderData(data, timeout=500) {
+export function fetchOrderData(data, timeout = 500) {
     return (dispatch, getState) => {
         setTimeout(() => {
             dispatch(orderData(data));
@@ -87,7 +87,7 @@ export function businessData(data) {
         data
     }
 }
-export function fetchBusinessData(data, timeout=500) {
+export function fetchBusinessData(data, timeout = 500) {
     return (dispatch, getState) => {
         setTimeout(() => {
             dispatch(businessData(data));
@@ -125,7 +125,7 @@ export function productData(data) {
         data
     }
 }
-export function fetchProductData(data, timeout=500) {
+export function fetchProductData(data, timeout = 500) {
     return (dispatch, getState) => {
         setTimeout(() => {
             dispatch(productData(data));
@@ -152,22 +152,22 @@ export function productClear() {
 
 // admin manage module
 export const AdminConsts = {
-    ADMIN_DATA:"ADMIN_DATA",
-    ADMIN_PAGE:"ADMIN_PAGE",
-    ADMIN_PAGE_CHANGE:"ADMIN_PAGE_CHANGE",
-    ADMIN_CLEAR:"ADMIN_CLEAR",
-    ADMIN_BEGIN_LOADING:"ADMIN_BEGIN_LOADING",
-    ADMIN_FINISH_PENDING:"ADMIN_FINISH_PENDING",
-    ADMIN_BEGIN_SUBMIT:"ADMIN_BEGIN_SUBMIT",
-    ADMIN_FINISH_SUBMIT:"ADMIN_FINISH_SUBMIT",
-    ADMIN_SHOW_FORM:"ADMIN_SHOW_FORM",
-    ADMIN_CLOSE_FORM:"ADMIN_CLOSE_FORM"
+    ADMIN_DATA: "ADMIN_DATA",
+    ADMIN_PAGE: "ADMIN_PAGE",
+    ADMIN_PAGE_CHANGE: "ADMIN_PAGE_CHANGE",
+    ADMIN_CLEAR: "ADMIN_CLEAR",
+    ADMIN_BEGIN_LOADING: "ADMIN_BEGIN_LOADING",
+    ADMIN_FINISH_PENDING: "ADMIN_FINISH_PENDING",
+    ADMIN_BEGIN_SUBMIT: "ADMIN_BEGIN_SUBMIT",
+    ADMIN_FINISH_SUBMIT: "ADMIN_FINISH_SUBMIT",
+    ADMIN_SHOW_FORM: "ADMIN_SHOW_FORM",
+    ADMIN_CLOSE_FORM: "ADMIN_CLOSE_FORM"
 }
 
 // push data to store and some raw operations
 export function adminData(data) {
     let len = data.length;
-    for(let i = 0; i < len; i++) {
+    for (let i = 0; i < len; i++) {
         data[i] = {
             ...data[i],
             loading: false,
