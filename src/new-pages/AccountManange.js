@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import { Button, Icon, Modal, Input, message, Form, Table } from 'antd';
 
-import { fetchAdminData, adminClear, adminPageChange } from '../actions';
+import { fetchAdminData, adminClear, adminPageChange, adminPending, adminSubmit, adminShowForm, adminCloseForm } from '../actions';
 import { fakeAdminData } from '../data';
 
 const FormItem = Form.Item;
@@ -12,12 +12,6 @@ function hasErrors(fieldsError) {
     return Object.keys(fieldsError).some(field => fieldsError[field]);
 }
 class AddNewForm extends Component {
-    constructor(props) {
-        super(props);
-        this.state = {
-            loading: false
-        }
-    }
     componentDidMount() {
         this.props.form.validateFields();
     }
@@ -26,9 +20,6 @@ class AddNewForm extends Component {
         this.props.form.validateFields((err, values) => {
             if (!err) {
                 this.props.submitNewAccount(values);
-                this.setState({
-                    loading: true
-                })
             }
         });
     }
@@ -62,7 +53,7 @@ class AddNewForm extends Component {
                     type="primary"
                     htmlType="submit"
                     disabled={hasErrors(getFieldsError())}
-                    loading={this.state.loading}
+                    loading={this.props.loading}
                 >
                     确认添加
                 </Button>
@@ -74,12 +65,6 @@ const WrappedAddNewForm = Form.create()(AddNewForm);
 // add-new-from end
 
 class AccountManage extends Component {
-    constructor(props) {
-        super(props);
-        this.state = {
-            showAddForm: false
-        }
-    }
     componentDidMount() {
         this.props.dispatch(fetchAdminData(fakeAdminData()));
     }
@@ -88,33 +73,34 @@ class AccountManage extends Component {
     }
     submitNewAccount(data) {
         // submit new account here
-        console.log(data);
-        return new Promise(r => {
-            setTimeout(() => {
-                r();
-            }, 1000);
-        }).then(() => {
-            message.success('添加成功');
-            this.closeAddForm();
-        })
+        this.props.dispatch(adminSubmit(data));
+    }
+    componentDidUpdate() {
+        console.log(this.props.data);
     }
     showAddForm() {
-        this.setState({
-            showAddForm: true
-        })
+        this.props.dispatch(adminShowForm());
     }
     closeAddForm() {
-        this.setState({
-            showAddForm: false
-        })
+        this.props.dispatch(adminCloseForm());
+    }
+    logOutAccount(id) {
+        // log out account
+        this.props.dispatch(adminPending(id));
     }
     render() {
-        const { showAddForm } = this.state;
-        const { data, page, totalPage, dispatch } = this.props;
+        const { data, page, totalPage, dispatch, showFormLoading, showForm } = this.props;
         const columns = [
             { title:'管理员ID', key: 'adminId', dataIndex: 'adminId' },
             { title:'管理员账号', key: 'adminAccount', dataIndex: 'adminAccount' },
-            { title:'操作', key: 'operation', render: () => ( <a style={{color:'red'}}>注销</a> ) }
+            { title:'操作', key: 'operation', render: (text, record) => (
+                <Button
+                    type='danger'
+                    onClick={() => {this.logOutAccount(record.adminId)}}
+                    loading={record.loading}
+                    disabled={record.disabled}
+                >注销</Button>
+            ) }
         ];
         const pagination = {
             current: page,
@@ -133,16 +119,17 @@ class AccountManage extends Component {
                 <div className="fixed-header-bar">
                     <Button onClick={() => { this.showAddForm() }}><Icon type='plus' />添加新管理员</Button>
                     <Modal
-                        visible={showAddForm}
+                        visible={showForm}
                         onCancel={() => { this.closeAddForm() }}
                         title='添加新管理员'
                         footer={null}
                         width={239}
                     >
                         {
-                            showAddForm ?
+                            showForm ?
                                 <WrappedAddNewForm
                                     submitNewAccount={(data) => { this.submitNewAccount(data) }}
+                                    loading={showFormLoading}
                                 /> :
                                 null
                         }
@@ -166,7 +153,9 @@ let mapStateToProps = state => {
 	return {
 		data: state.Admin.data,
 		page: state.Admin.page,
-		totalPage: state.Admin.totalPage
+        totalPage: state.Admin.totalPage,
+        showFormLoading: state.Admin.showFormLoading,
+        showForm: state.Admin.showForm
 	}
 }
 

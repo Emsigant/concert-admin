@@ -1,4 +1,7 @@
 import {
+    message
+} from 'antd';
+import {
     combineReducers
 } from 'redux';
 import {
@@ -211,12 +214,73 @@ function Admin(state, action) {
                     data: []
                 }
             }
+        case AdminConsts.ADMIN_BEGIN_LOADING:
+            {
+                let len = state.data.length;
+                let data = [...state.data];
+                for (let i = 0; i < len; i++) {
+                    if (data[i].adminId === action.id) {
+                        data[i].loading = true;
+                        break;
+                    }
+                }
+                return {
+                    ...state,
+                    data
+                }
+            }
+        case AdminConsts.ADMIN_FINISH_PENDING:
+            {
+                message.success('成功注销');
+                let len = state.data.length;
+                let data = [...state.data];
+                for (let i = 0; i < len; i++) {
+                    if (data[i].adminId === action.id) {
+                        data[i].loading = false;
+                        data[i].disabled = true;
+                        break;
+                    }
+                }
+                return {
+                    ...state,
+                    data
+                }
+            }
+        case AdminConsts.ADMIN_BEGIN_SUBMIT:
+            {
+                return {
+                    ...state,
+                    showFormLoading: true
+                }
+            }
+        case AdminConsts.ADMIN_FINISH_SUBMIT:
+            {
+                message.success('成功提交');
+                return {
+                    ...state,
+                    showFormLoading: false
+                }
+            }
+        case AdminConsts.ADMIN_SHOW_FORM:{
+            return {
+                ...state,
+                showForm: true
+            }
+        }
+        case AdminConsts.ADMIN_CLOSE_FORM:{
+            return {
+                ...state,
+                showForm: false
+            }
+        }
         default:
             {
                 return {
                     data: [],
                     totalPage: 5,
-                    page: 1
+                    page: 1,
+                    showFormLoading: false,
+                    showForm: false
                 }
             }
     }

@@ -155,9 +155,23 @@ export const AdminConsts = {
     ADMIN_DATA:"ADMIN_DATA",
     ADMIN_PAGE:"ADMIN_PAGE",
     ADMIN_PAGE_CHANGE:"ADMIN_PAGE_CHANGE",
-    ADMIN_CLEAR:"ADMIN_CLEAR"
+    ADMIN_CLEAR:"ADMIN_CLEAR",
+    ADMIN_BEGIN_LOADING:"ADMIN_BEGIN_LOADING",
+    ADMIN_FINISH_PENDING:"ADMIN_FINISH_PENDING",
+    ADMIN_BEGIN_SUBMIT:"ADMIN_BEGIN_SUBMIT",
+    ADMIN_FINISH_SUBMIT:"ADMIN_FINISH_SUBMIT",
+    ADMIN_SHOW_FORM:"ADMIN_SHOW_FORM",
+    ADMIN_CLOSE_FORM:"ADMIN_CLOSE_FORM"
 }
 export function adminData(data) {
+    let len = data.length;
+    for(let i = 0; i < len; i++) {
+        data[i] = {
+            ...data[i],
+            loading: false,
+            disabled: false
+        }
+    }
     return {
         type: AdminConsts.ADMIN_DATA,
         data
@@ -185,5 +199,54 @@ export function adminPageChange(step) {
 export function adminClear() {
     return {
         type: AdminConsts.ADMIN_CLEAR
+    }
+}
+export function adminBeginLoading(id) {
+    return {
+        type: AdminConsts.ADMIN_BEGIN_LOADING,
+        id
+    }
+}
+export function adminPending(id) {
+    return (dispatch, getState) => {
+        dispatch(adminBeginLoading(id));
+        setTimeout(() => {
+            dispatch(adminFinishPending(id));
+        }, 500);
+    }
+}
+export function adminFinishPending(id) {
+    return {
+        type: AdminConsts.ADMIN_FINISH_PENDING,
+        id
+    }
+}
+export function adminSubmit(data) {
+    return (dispatch, getState) => {
+        dispatch(adminBeginSubmit());
+        setTimeout(() => {
+            dispatch(adminFinishSubmitNew());
+            dispatch(adminCloseForm());
+        }, 500);
+    }
+}
+export function adminBeginSubmit() {
+    return {
+        type: AdminConsts.ADMIN_BEGIN_SUBMIT
+    }
+}
+export function adminFinishSubmitNew() {
+    return {
+        type: AdminConsts.ADMIN_FINISH_SUBMIT
+    }
+}
+export function adminShowForm() {
+    return {
+        type: AdminConsts.ADMIN_SHOW_FORM
+    }
+}
+export function adminCloseForm() {
+    return {
+        type: AdminConsts.ADMIN_CLOSE_FORM
     }
 }
