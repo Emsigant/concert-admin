@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
-import { Table, Modal } from 'antd';
+import { Table, Modal, Button } from 'antd';
 
 import { fakeFetchBusinessData } from '../data';
 import { fetchBusinessData, businessClear, businessPageChange } from '../actions';
@@ -74,9 +74,9 @@ class BusinessManage extends Component {
 				title: '操作', key: 'operation', render: (text, record) => (
 					record.reveiwStatusCode === 2 ?
 						<div>
-							<a style={{ color: '#0a0' }}>通过</a>
+							<Button type='primary' size='small'>通过</Button>
 							<span className="ant-divider"></span>
-							<a style={{ color: '#f00' }}>不通过</a>
+							<Button type='danger' size='small'>不通过</Button>
 						</div>
 						:
 						'-'

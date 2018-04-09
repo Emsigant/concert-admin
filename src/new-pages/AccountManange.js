@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
-import { Button, Icon, Modal, Input, message, Form, Table } from 'antd';
+import { Button, Icon, Modal, Input, Form, Table } from 'antd';
 
 import { fetchAdminData, adminClear, adminPageChange, adminPending, adminSubmit, adminShowForm, adminCloseForm } from '../actions';
 import { fakeAdminData } from '../data';
@@ -75,9 +75,6 @@ class AccountManage extends Component {
         // submit new account here
         this.props.dispatch(adminSubmit(data));
     }
-    componentDidUpdate() {
-        console.log(this.props.data);
-    }
     showAddForm() {
         this.props.dispatch(adminShowForm());
     }
@@ -94,8 +91,9 @@ class AccountManage extends Component {
             { title: '管理员ID', key: 'adminId', dataIndex: 'adminId' },
             { title: '管理员账号', key: 'adminAccount', dataIndex: 'adminAccount' },
             {
-                title: '操作', key: 'operation', render: (text, record) => (
+                title: '操作', key: 'operation', width: 300,render: (text, record) => (
                     <Button
+                        size='small'
                         type='danger'
                         onClick={() => { this.logOutAccount(record.adminId) }}
                         loading={record.loading}
@@ -114,7 +112,8 @@ class AccountManage extends Component {
             },
             total: (totalPage * 10),
             pageSize: 10,
-            showQuickJumper: true
+            showQuickJumper: true,
+            hideOnSinglePage: true
         }
         return (
             <div className="route">

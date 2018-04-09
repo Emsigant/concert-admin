@@ -282,7 +282,7 @@ function Admin(state, action) {
             {
                 return {
                     data: [],
-                    totalPage: 5,
+                    totalPage: 1,
                     page: 1,
                     showFormLoading: false,
                     showForm: false

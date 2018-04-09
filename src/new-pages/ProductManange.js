@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
-import { Table, Modal } from 'antd';
+import { Table, Modal, Button } from 'antd';
 
 import { fakeFetchProductData } from '../data';
 import { productClear, fetchProductData, productPageChange } from '../actions';
@@ -41,9 +41,9 @@ class ProductManage extends Component {
             { title: '折扣信息', key: 'productDiscountInfo', dataIndex: 'productDiscountInfo' },
             { title: '所属商家', key: 'productOriginBusiness', dataIndex: 'productOriginBusiness' },
             { title: '上架状态', key: 'productStatus', dataIndex: 'productStatus' },
-            { title: '精选', key: 'highlight', render:(text, record)=>( <a>{record.isHighLight?'取消精选':'设为精选'}</a> ) },
-            { title: '小编推荐', key: 'recommend', render:(text, record)=>( <a>{record.isRecommendation?'取消推荐':'设为小编推荐'}</a> ) },
-            { title: '下架', key: 'abandon', render:()=>( <a style={{color:'red'}}>下架</a> ) },
+            { title: '精选', key: 'highlight', render:(text, record)=>( <Button size='small'>{record.isHighLight?'取消精选':'设为精选'}</Button> ) },
+            { title: '小编推荐', key: 'recommend', render:(text, record)=>( <Button size='small'>{record.isRecommendation?'取消推荐':'设为小编推荐'}</Button> ) },
+            { title: '下架', key: 'abandon', render:()=>( <Button type='danger' size='small'>下架</Button> ) },
         ];
         const paginationOptions = {
 			current: page,
