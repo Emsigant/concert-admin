@@ -163,6 +163,8 @@ export const AdminConsts = {
     ADMIN_SHOW_FORM:"ADMIN_SHOW_FORM",
     ADMIN_CLOSE_FORM:"ADMIN_CLOSE_FORM"
 }
+
+// push data to store and some raw operations
 export function adminData(data) {
     let len = data.length;
     for(let i = 0; i < len; i++) {
@@ -177,6 +179,8 @@ export function adminData(data) {
         data
     }
 }
+
+// fetch data from server
 export function fetchAdminData(data, timeout = 500) {
     return (dispatch, getState) => {
         setTimeout(() => {
@@ -184,29 +188,39 @@ export function fetchAdminData(data, timeout = 500) {
         }, timeout);
     }
 }
+
+// push totalPage to store
 export function adminPage(totalPage) {
     return {
         type: AdminConsts.ADMIN_PAGE,
         totalPage
     }
 }
+
+// page change event handler
 export function adminPageChange(step) {
     return {
         type: AdminConsts.ADMIN_PAGE_CHANGE,
         step
     }
 }
+
+// clear data in store
 export function adminClear() {
     return {
         type: AdminConsts.ADMIN_CLEAR
     }
 }
+
+// change log-out buttons' loading status
 export function adminBeginLoading(id) {
     return {
         type: AdminConsts.ADMIN_BEGIN_LOADING,
         id
     }
 }
+
+// async log-out admin action
 export function adminPending(id) {
     return (dispatch, getState) => {
         dispatch(adminBeginLoading(id));
@@ -215,12 +229,16 @@ export function adminPending(id) {
         }, 500);
     }
 }
+
+// invoke when pending status has been finished
 export function adminFinishPending(id) {
     return {
         type: AdminConsts.ADMIN_FINISH_PENDING,
         id
     }
 }
+
+// async submit new admin
 export function adminSubmit(data) {
     return (dispatch, getState) => {
         dispatch(adminBeginSubmit());
@@ -230,21 +248,29 @@ export function adminSubmit(data) {
         }, 500);
     }
 }
+
+// invoke before async submit
 export function adminBeginSubmit() {
     return {
         type: AdminConsts.ADMIN_BEGIN_SUBMIT
     }
 }
+
+// invoke after async submit
 export function adminFinishSubmitNew() {
     return {
         type: AdminConsts.ADMIN_FINISH_SUBMIT
     }
 }
+
+// show add form
 export function adminShowForm() {
     return {
         type: AdminConsts.ADMIN_SHOW_FORM
     }
 }
+
+// close add form
 export function adminCloseForm() {
     return {
         type: AdminConsts.ADMIN_CLOSE_FORM
