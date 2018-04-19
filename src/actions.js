@@ -173,14 +173,14 @@ export function productClear() {
 // admin manage module
 function AdminFetchStatusChange(status) {
     return {
-        type: AdminConsts.ADMIN_FETCH_STATUS_CHANGE,
+        type: ADMIN_CONSTS.ADMIN_FETCH_STATUS_CHANGE,
         status,
     }
 }
 
 function AdminPushDataToStore(data) {
     return {
-        type: AdminConsts.ADMIN_PUSH_DATA_TO_STORE,
+        type: ADMIN_CONSTS.ADMIN_PUSH_DATA_TO_STORE,
         data,
     }
 }
