@@ -5,7 +5,7 @@ import React, {
 class Welcome extends Component {
     render() {
         return (
-            <div className='route' style={{fontSize:'5rem',margin:'5rem'}}>Welcome</div>
+            <div className='route' style={{fontSize:'5rem',margin:'5rem'}}>欢迎</div>
         )
     }
 }
