@@ -95,12 +95,11 @@ export function fakeFetchProductData(start = 0, end = 10) {
 
 export function fakeAdminData(start = 0, end = 10) {
     let arr = [];
-    for(let i = start; i < end; i++) {
+    for (let i = start; i < end; i++) {
         arr.push({
-            key:`admin-${i}`,
-            adminId: `${i}`,
-            adminAccount: `admin-${i}`,
-            adminStatus:'0|1' // active or disabled
+            userId: `UI0000${i}`,
+            phone: `1234567890${i}`,
+            status: '' + (i % 2), // '0' for normal, '1' for non-used
         })
     }
     return arr;

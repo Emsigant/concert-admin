@@ -14,6 +14,9 @@ import {
     ProductConsts,
     AdminConsts
 } from './actions'
+import {
+    ADMIN_CONSTS,
+} from "./CONST";
 
 // 重构的User模块
 function User(state, action) {
@@ -188,13 +191,54 @@ function Product(state, action) {
 
 function Admin(state, action) {
     switch (action.type) {
-        default: {
-            return {
-                data: [],
-                page: 1,
-                total: 1,
+        case ADMIN_CONSTS.ADMIN_PUSH_DATA_TO_STORE:
+            {
+                return {
+                    ...state,
+                    data: action.content.dataList,
+                    total: action.content.total,
+                    page: action.content.pageNo,
+                }
             }
-        }
+        case ADMIN_CONSTS.ADMIN_FETCH_STATUS_CHANGE:
+            {
+                return {
+                    ...state,
+                    fetchDataStatus: action.status,
+                }
+            }
+        case ADMIN_CONSTS.ADMIN_SUBMIT_STATUS_CHANGE:
+            {
+                return {
+                    ...state,
+                    submitDataStatus: action.status,
+                }
+            }
+        case ADMIN_CONSTS.ADMIN_PAGE_CHANGE:
+            {
+                return {
+                    ...state,
+                    page: state.page + action.diff,
+                }
+            }
+        case ADMIN_CONSTS.ADMIN_UPDATE_STATUS_CHANGE:
+            {
+                return {
+                    ...state,
+                    updateDataStatus: action.status,
+                }
+            }
+        default:
+            {
+                return {
+                    data: [],
+                    page: 1,
+                    total: 1,
+                    fetchDataStatus: 'init',
+                    submitDataStatus: 'init',
+                    updateDataStatus: 'init',
+                }
+            }
     }
 }
 

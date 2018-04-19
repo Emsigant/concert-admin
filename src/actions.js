@@ -4,14 +4,10 @@ import {
 } from "./data";
 import {
     ADMIN_CONSTS,
+    COMMON_STATUS,
 } from "./CONST";
 
 const ENVIRONMENT = 'dev';
-const COMMON_STATUS = {
-    PENDING: 'pending',
-    RESOLVED: 'resolved',
-    REJECTED: 'rejected',
-};
 const COMMON_FETCH_OPTIONS = {
     credentials: 'include',
     headers: {
@@ -170,6 +166,8 @@ export function productClear() {
     }
 }
 
+
+
 // admin manage module
 function AdminFetchStatusChange(status) {
     return {
@@ -178,10 +176,10 @@ function AdminFetchStatusChange(status) {
     }
 }
 
-function AdminPushDataToStore(data) {
+function AdminPushDataToStore(content) {
     return {
         type: ADMIN_CONSTS.ADMIN_PUSH_DATA_TO_STORE,
-        data,
+        content,
     }
 }
 
@@ -192,13 +190,30 @@ function AdminSubmitStatusChange(status) {
     }
 }
 
+function AdminUpdateStatusChange(status) {
+    return {
+        type: ADMIN_CONSTS.ADMIN_UPDATE_STATUS_CHANGE,
+        status,
+    }
+}
+export function AdminPageChange(diff) {
+    return {
+        type: ADMIN_CONSTS.ADMIN_PAGE_CHANGE,
+        diff,
+    }
+}
+
 export function FetchAdminData(pageNo = 1, pageSize = 10) {
     return (dispatch, getState) => {
         dispatch(AdminFetchStatusChange(COMMON_STATUS.PENDING));
         if (ENVIRONMENT === 'dev') {
             setTimeout(() => {
-                dispatch(COMMON_STATUS.RESOLVED);
-                dispatch(AdminPushDataToStore(fakeAdminData(pageNo - 1, (pageNo - 1) + 10)));
+                dispatch(AdminFetchStatusChange(COMMON_STATUS.RESOLVED));
+                dispatch(AdminPushDataToStore({
+                    total: 50,
+                    dataList: fakeAdminData((pageNo - 1) * 10, pageNo * 10),
+                    pageNo,
+                }));
             }, 500);
         } else if (ENVIRONMENT === 'prod') {
 
@@ -206,13 +221,27 @@ export function FetchAdminData(pageNo = 1, pageSize = 10) {
     }
 }
 
-export function SubmitAdmin(data) {
+export function SubmitAdmin(data, pageNo) {
     return (dispatch, getState) => {
         dispatch(AdminSubmitStatusChange(COMMON_STATUS.PENDING));
         if (ENVIRONMENT === 'dev') {
             setTimeout(() => {
-                console.log(data);
                 dispatch(AdminSubmitStatusChange(COMMON_STATUS.RESOLVED));
+                dispatch(FetchAdminData(pageNo));
+            }, 500);
+        } else if (ENVIRONMENT === 'prod') {
+
+        }
+    }
+}
+
+export function UpdateAdmin(data, pageNo) {
+    return (dispatch, getState) => {
+        dispatch(AdminUpdateStatusChange(COMMON_STATUS.PENDING));
+        if (ENVIRONMENT === 'dev') {
+            setTimeout(() => {
+                dispatch(AdminUpdateStatusChange(COMMON_STATUS.RESOLVED));
+                dispatch(FetchAdminData(pageNo));
             }, 500);
         } else if (ENVIRONMENT === 'prod') {
 

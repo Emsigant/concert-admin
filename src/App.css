@@ -326,3 +326,11 @@ select {
     width: 100%;
     margin-bottom: 1rem;
 }
+
+.plain-input-margin {
+    margin-bottom: 1rem;
+    display: flex;
+}
+.red-span {
+    color: red;
+}
