@@ -80,7 +80,7 @@ class AccountManage extends Component {
     constructor(props) {
         super(props);
         this.state = {
-            showAddFormModal: true,
+            showAddFormModal: false,
         }
     }
     componentDidMount() {

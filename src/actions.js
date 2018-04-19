@@ -1,9 +1,11 @@
 // re-designed user module
 import {
     fakeAdminData,
+    fakeUserData,
 } from "./data";
 import {
     ADMIN_CONSTS,
+    USER_CONSTS,
     COMMON_STATUS,
 } from "./CONST";
 
@@ -14,43 +16,6 @@ const COMMON_FETCH_OPTIONS = {
         'Content-Type': 'application/json',
     },
 };
-
-export const UserConsts = {
-    PUSH_USER_DATA: 'PUSH_USER_DATA',
-    PUSH_USER_PAGE: 'PUSH_USER_PAGE',
-    USER_PAGE_CHANGE: 'USER_PAGE_CHANGE',
-    USER_CLEAR: 'USER_CLEAR'
-}
-export function userData(data) {
-    return {
-        type: UserConsts.PUSH_USER_DATA,
-        data
-    }
-}
-export function fetchUserData(data, timeout = 500) {
-    return (dispatch, getState) => {
-        setTimeout(() => {
-            dispatch(userData(data));
-        }, timeout);
-    }
-}
-export function userPage(totalPage) {
-    return {
-        type: UserConsts.PUSH_USER_PAGE,
-        totalPage
-    }
-}
-export function userPageChange(step) {
-    return {
-        type: UserConsts.USER_PAGE_CHANGE,
-        step
-    }
-}
-export function userClear() {
-    return {
-        type: UserConsts.USER_CLEAR
-    }
-}
 
 // order module
 export const OrderConsts = {
@@ -166,9 +131,81 @@ export function productClear() {
     }
 }
 
+// common status change function
+// StatusChangeGenerator('admin')('fetch')(status) => { type:ADMIN_CONST['ADMIN_FETCH_STATUS_CHANGE'], status }
+function StatusChangeGenerator(_module = '') {
+    switch (_module) {
+        case 'admin':
+            {
+                return (_action = '') => (status) => ({
+                    type: ADMIN_CONSTS[`${_module.toUpperCase()}_${_action.toUpperCase()}_STATUS_CHANGE`],
+                    status,
+                })
+            }
+            break;
+        case 'user':
+            {
+                return (_action = '') => (status) => ({
+                    type: USER_CONSTS[`${_module.toUpperCase()}_${_action.toUpperCase()}_STATUS_CHANGE`],
+                    status,
+                })
+            }
+            break;
+        case 'product':
+            {
 
+            }
+            break;
+        case 'business':
+            {
 
-// admin manage module
+            }
+            break;
+        case 'order':
+            {
+
+            }
+            break;
+        default:
+            {
+                throw new Error('Unknown module');
+            }
+    }
+}
+
+// new user manage module
+function PushContentToUserStore(content) {
+    return {
+        type: USER_CONSTS.PUSH_CONTENT_TO_USER_STORE,
+        content,
+    }
+}
+
+export function UserPageChange(diff) {
+    return {
+        type: USER_CONSTS.USER_PAGE_CHANGE,
+        diff,
+    }
+}
+export function FetchUser(pageNo = 1, pageSize = 10) {
+    return (dispatch, getState) => {
+        dispatch(StatusChangeGenerator('user')('fetch')(COMMON_STATUS.PENDING));
+        if (ENVIRONMENT === 'dev') {
+            setTimeout(() => {
+                dispatch(StatusChangeGenerator('user')('fetch')(COMMON_STATUS.RESOLVED));
+                dispatch(PushContentToUserStore({
+                    dataList: fakeUserData((pageNo - 1) * 10, pageNo * 10),
+                    totalCount: 50,
+                    pageNo,
+                }));
+            }, 500);
+        } else if (ENVIRONMENT === 'prod') {
+
+        }
+    }
+}
+
+// new admin manage module
 function AdminFetchStatusChange(status) {
     return {
         type: ADMIN_CONSTS.ADMIN_FETCH_STATUS_CHANGE,

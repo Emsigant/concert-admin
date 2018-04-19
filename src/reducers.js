@@ -16,46 +16,45 @@ import {
 } from './actions'
 import {
     ADMIN_CONSTS,
+    USER_CONSTS,
+    BUSINESS_CONSTS,
+    PRODUCT_CONSTS,
+    ORDER_CONSTS,
 } from "./CONST";
 
 // 重构的User模块
 function User(state, action) {
     switch (action.type) {
-        case UserConsts.PUSH_USER_DATA:
+        case USER_CONSTS.PUSH_CONTENT_TO_USER_STORE:
             {
                 return {
                     ...state,
-                    data: action.data
+                    pageNo: action.content.pageNo,
+                    dataList: action.content.dataList,
+                    totalCount: action.content.totalCount,
                 }
             }
-        case UserConsts.USER_PAGE_CHANGE:
+        case USER_CONSTS.USER_FETCH_STATUS_CHANGE:
             {
-                let page = state.page + action.step;
                 return {
                     ...state,
-                    page
+                    fetchStatus: action.status,
                 }
             }
-        case UserConsts.PUSH_USER_PAGE:
+        case USER_CONSTS.USER_PAGE_CHANGE:
             {
                 return {
                     ...state,
-                    totalPage: action.totalPage
-                }
-            }
-        case UserConsts.USER_CLEAR:
-            {
-                return {
-                    ...state,
-                    data: []
+                    pageNo: state.pageNo + action.diff,
                 }
             }
         default:
             {
                 return {
-                    page: 1,
-                    totalPage: 10,
-                    data: []
+                    pageNo: 1,
+                    totalCount: 1,
+                    dataList: [],
+                    fetchStatus: 'init',
                 }
             }
     }

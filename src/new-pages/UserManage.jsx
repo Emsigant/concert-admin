@@ -2,8 +2,7 @@ import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import { Table } from 'antd';
 
-import { fakeFetchUserData } from '../data';
-import { userPageChange, userClear, fetchUserData } from '../actions';
+import { FetchUser, UserPageChange } from '../actions';
 
 const columns = [
     { title: '用户ID', dataIndex: 'userId', key: 'userId' },
@@ -15,32 +14,26 @@ const columns = [
 
 class UserManage extends Component {
     componentDidMount() {
-        this.props.dispatch(fetchUserData(fakeFetchUserData()));
-    }
-    componentWillUnmount() {
-        this.props.dispatch(userClear());
+        this.props.dispatch(FetchUser());
     }
     render() {
-        const { data, page, totalPage, dispatch } = this.props;
+        const { dataList, pageNo, totalCount, dispatch, fetchStatus } = this.props;
         const paginationOptions = {
-            current: page,
-            defaultCurrent: 1,
+            current: pageNo,
             onChange(targetPage, pageSize) {
-                dispatch(userPageChange(targetPage - page));
-                dispatch(userClear());
-                dispatch(fetchUserData(fakeFetchUserData((targetPage-1)*10, targetPage*10)));
+                dispatch(UserPageChange(targetPage - pageNo));
+                dispatch(FetchUser(targetPage));
             },
-            total: (totalPage * 10),
-            pageSize: 10,
+            total: totalCount,
             showQuickJumper: true
         };
         return (
             <div className='route'>
                 <Table
+                    loading={fetchStatus === 'pending'}
                     columns={columns}
-                    dataSource={data}
+                    dataSource={dataList}
                     bordered
-                    loading={data.length === 0}
                     pagination={paginationOptions}
                 />
             </div>
@@ -50,9 +43,10 @@ class UserManage extends Component {
 
 const mapStateToProps = state => {
     return {
-        data: state.User.data,
-        page: state.User.page,
-        totalPage: state.User.totalPage
+        dataList: state.User.dataList,
+        pageNo: state.User.pageNo,
+        totalCount: state.User.totalCount,
+        fetchStatus: state.User.fetchStatus,
     }
 }
 

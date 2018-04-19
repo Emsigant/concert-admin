@@ -1,4 +1,4 @@
-export function fakeFetchUserData(start = 0, end = 10) {
+export function fakeUserData(start = 0, end = 10) {
     let arr = [];
     let cityArr = ['北京', '上海', '广州', '深圳', '天津', '重庆', '成都', '杭州', '南京', '武汉', '西安', '大连', '青岛'];
     let cityLen = cityArr.length;

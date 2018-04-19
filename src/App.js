@@ -15,16 +15,11 @@ import reducers from './reducers';
 
 // new pages
 import Welcome from './new-pages/Welcome';
-import UserManage from './new-pages/UserManage';
+import UserManage from './new-pages/UserManage.jsx';
 import OrderManage from './new-pages/OrderManage';
 import BusinessManage from './new-pages/BusinessManage';
 import ProductManage from './new-pages/ProductManange';
 import AccountManage from './new-pages/AccountManange.jsx';
-// abandoned pages
-// import User from './pages/user';
-// import Order from './pages/order';
-// import Product from './pages/product';
-// import Business from './pages/business';
 
 moment.locale('zh_cn');
 
