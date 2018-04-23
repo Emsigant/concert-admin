@@ -2,12 +2,20 @@
 import {
     fakeAdminData,
     fakeUserData,
+    fakeFetchBusinessData,
+    fakeFetchEncashRecord,
 } from "./data";
 import {
     ADMIN_CONSTS,
     USER_CONSTS,
     COMMON_STATUS,
+    ORDER_CONSTS,
+    BUSINESS_CONSTS,
+    PRODUCT_CONSTS,
 } from "./CONST";
+import {
+    message,
+} from "antd";
 
 const ENVIRONMENT = 'dev';
 const COMMON_FETCH_OPTIONS = {
@@ -18,78 +26,181 @@ const COMMON_FETCH_OPTIONS = {
 };
 
 // order module
-export const OrderConsts = {
-    ORDER_DATA: 'ORDER_DATA',
-    ORDER_PAGE: 'ORDER_PAGE',
-    ORDER_PAGE_CHANGE: 'ORDER_PAGE_CHANGE',
-    ORDER_CLEAR: 'ORDER_CLEAR'
-}
-export function orderData(data) {
+function PushOrderContentToStore(content) {
     return {
-        type: OrderConsts.ORDER_DATA,
-        data
-    }
-}
-export function fetchOrderData(data, timeout = 500) {
-    return (dispatch, getState) => {
-        setTimeout(() => {
-            dispatch(orderData(data));
-        }, timeout);
-    }
-}
-export function orderPage(totalPage) {
-    return {
-        type: OrderConsts.ORDER_PAGE,
-        totalPage
-    }
-}
-export function orderPageChange(step) {
-    return {
-        type: OrderConsts.ORDER_PAGE_CHANGE,
-        step
-    }
-}
-export function orderClear() {
-    return {
-        type: OrderConsts.ORDER_CLEAR
+        type: ORDER_CONSTS.PUSH_ORDER_CONTENT_TO_STORE,
+        content,
     }
 }
 
-// business module
-export const BusinessConsts = {
-    BUSINESS_DATA: 'BUSINESS_DATA',
-    BUSINESS_PAGE: 'BUSINESS_PAGE',
-    BUSINESS_PAGE_CHANGE: 'BUSINESS_PAGE_CHANGE',
-    BUSINESS_CLEAR: 'BUSINESS_CLEAR'
-}
-export function businessData(data) {
+export function OrderPageChange(diff) {
     return {
-        type: BusinessConsts.BUSINESS_DATA,
-        data
+        type: ORDER_CONSTS.ORDER_PAGE_CHNAGE,
+        diff,
     }
 }
-export function fetchBusinessData(data, timeout = 500) {
+
+export function FetchOrder(pageNo = 1, pageSize = 10, statusFilter = '0') {
     return (dispatch, getState) => {
-        setTimeout(() => {
-            dispatch(businessData(data));
-        }, timeout);
+        dispatch(StatusChangeGenerator('order')('fetch')(COMMON_STATUS.PENDING))
+        if (ENVIRONMENT === 'dev') {
+            setTimeout(() => {
+                dispatch(StatusChangeGenerator('order')('fetch')(COMMON_STATUS.RESOLVED));
+                dispatch(PushOrderContentToStore({
+                    totalCount: 50,
+                    pageNo,
+                    dataList: [],
+                }))
+            }, 500);
+        } else {
+
+        }
     }
 }
-export function businessPage(totalPage) {
+
+// new business module
+export function BusinessPageChange(diff) {
     return {
-        type: BusinessConsts.BUSINESS_PAGE,
-        totalPage
+        type: BUSINESS_CONSTS.BUSINESS_PAGE_CHANGE,
+        diff,
     }
 }
-export function businessPageChange(step) {
+
+function PushBusinessContentToStore(content) {
     return {
-        type: BusinessConsts.BUSINESS_PAGE_CHANGE,
-        step
+        type: BUSINESS_CONSTS.PUSH_BUSINESS_CONTENT_TO_STORE,
+        content,
     }
 }
-export function businessClear() {
+
+export function BusinessChangeFilter(statusFilter) {
     return {
-        type: BusinessConsts.BUSINESS_CLEAR
+        type: BUSINESS_CONSTS.BUSINESS_CHANGE_FILTER,
+        statusFilter,
+    }
+}
+
+export function UpdateBusiness(data, pageNo = 1, statusFilter = '0') {
+    return (dispatch, getState) => {
+        fetch('/admin/certificate_client', {
+                method: 'post',
+                body: JSON.stringify(data),
+                ...COMMON_FETCH_OPTIONS,
+            })
+            .then(res => res.json())
+            .then(res => {
+                if (res.code === '1') {
+                    message.success('修改成功');
+                    dispatch(FetchBusiness(pageNo, 10, statusFilter))
+                } else {
+                    message.error('修改失败，请重试');
+                }
+            })
+            .catch(err => {
+                message.error('修改失败，请重试');
+            });
+    }
+}
+
+export function FetchBusiness(pageNo = 1, pageSize = 10, statusFilter = '0') {
+    window.scrollTo(0, 0);
+    return (dispatch, getState) => {
+        dispatch(StatusChangeGenerator('business')('fetch')(COMMON_STATUS.PENDING));
+        if (ENVIRONMENT === 'dev') {
+            setTimeout(() => {
+                dispatch(StatusChangeGenerator('business')('fetch')(COMMON_STATUS.RESOLVED));
+                dispatch(PushBusinessContentToStore({
+                    dataList: fakeFetchBusinessData((pageNo - 1) * 10, pageNo * 10, statusFilter),
+                    totalCount: 50,
+                    pageNo,
+                }))
+            }, 500);
+        } else {
+            fetch('/admin/client/query', {
+                    method: 'post',
+                    body: JSON.stringify({
+                        pageNo,
+                        pageSize,
+                        status: statusFilter,
+                    }),
+                    ...COMMON_FETCH_OPTIONS,
+                })
+                .then(res => res.json())
+                .then(res => {
+                    if (res.code === '1') {
+                        message.success('成功获取信息', .5);
+                        dispatch(StatusChangeGenerator('business')('fetch')(COMMON_STATUS.RESOLVED));
+                        dispatch(PushBusinessContentToStore(res.content));
+                    } else {
+                        message.error('获取信息失败，请重试', .5);
+                        dispatch(StatusChangeGenerator('business')('fetch')(COMMON_STATUS.REJECTED));
+                    }
+                })
+                .catch(err => {
+                    message.error('获取信息失败，请重试', .5);
+                    dispatch(StatusChangeGenerator('business')('fetch')(COMMON_STATUS.REJECTED));
+                });
+        }
+    }
+}
+
+function PushWithdrawContentToStore(content) {
+    return {
+        type: BUSINESS_CONSTS.PUSH_WITHDRAW_CONTENT_TO_STORE,
+        content,
+    }
+}
+
+function WithdrawFetchStatusChange(status) {
+    return {
+        type: BUSINESS_CONSTS.WITHDRAW_FETCH_STATUS_CHANGE,
+        status,
+    }
+}
+export function WithdrawPageChange(diff) {
+    return {
+        type: BUSINESS_CONSTS.WITHDRAW_PAGE_CHANGE,
+        diff,
+    }
+}
+export function FetchWithdraw(pageNo = 1, pageSize = 10, userId) {
+    return (dispatch, getState) => {
+        dispatch(WithdrawFetchStatusChange(COMMON_STATUS.PENDING));
+        if (ENVIRONMENT === 'dev') {
+            setTimeout(() => {
+                dispatch(WithdrawFetchStatusChange(COMMON_STATUS.RESOLVED));
+                dispatch(PushWithdrawContentToStore({
+                    dataList: fakeFetchEncashRecord((pageNo - 1) * 10, pageNo * 10),
+                    pageNo,
+                    totalCount: 100,
+                }))
+            }, 500);
+        } else {
+            fetch('/admin/client/withdraw_order', {
+                    method: 'post',
+                    body: JSON.stringify({
+                        pageNo,
+                        pageSize,
+                        userId,
+                    }),
+                    ...COMMON_FETCH_OPTIONS,
+                })
+                .then(res => res.json())
+                .then(res => {
+                    if (res.code === '1') {
+                        message.success('成功获取信息', .5);
+                        dispatch(WithdrawFetchStatusChange(COMMON_STATUS.RESOLVED));
+                        dispatch(PushWithdrawContentToStore(res.content));
+                    } else {
+                        message.error('获取信息失败，请重试', .5);
+                        dispatch(WithdrawFetchStatusChange(COMMON_STATUS.REJECTED));
+                    }
+                })
+                .catch(err => {
+                    message.error('获取信息失败，请重试', .5);
+                    dispatch(WithdrawFetchStatusChange(COMMON_STATUS.REJECTED));
+                });
+        }
     }
 }
 
@@ -132,48 +243,64 @@ export function productClear() {
 }
 
 // common status change function
-// StatusChangeGenerator('admin')('fetch')(status) => { type:ADMIN_CONST['ADMIN_FETCH_STATUS_CHANGE'], status }
+// StatusChangeGenerator('admin')('fetch')(status) 
+// => { type:ADMIN_CONST['ADMIN_FETCH_STATUS_CHANGE'], status }
 function StatusChangeGenerator(_module = '') {
     switch (_module) {
         case 'admin':
             {
-                return (_action = '') => (status) => ({
-                    type: ADMIN_CONSTS[`${_module.toUpperCase()}_${_action.toUpperCase()}_STATUS_CHANGE`],
+                let _M = _module.toUpperCase();
+                return (_action = '') => (status = '') => ({
+                    type: ADMIN_CONSTS[`${_M}_${_action.toUpperCase()}_STATUS_CHANGE`],
                     status,
                 })
             }
             break;
         case 'user':
             {
-                return (_action = '') => (status) => ({
-                    type: USER_CONSTS[`${_module.toUpperCase()}_${_action.toUpperCase()}_STATUS_CHANGE`],
+                let _M = _module.toUpperCase();
+                return (_action = '') => (status = '') => ({
+                    type: USER_CONSTS[`${_M}_${_action.toUpperCase()}_STATUS_CHANGE`],
                     status,
                 })
             }
             break;
         case 'product':
             {
-
+                let _M = _module.toUpperCase();
+                return (_action = '') => (status = '') => ({
+                    type: PRODUCT_CONSTS[`${_M}_${_action.toUpperCase()}_STATUS_CHANGE`],
+                    status,
+                });
             }
             break;
         case 'business':
             {
-
+                let _M = _module.toUpperCase();
+                return (_action = '') => (status = '') => ({
+                    type: BUSINESS_CONSTS[`${_M}_${_action.toUpperCase()}_STATUS_CHANGE`],
+                    status,
+                });
             }
             break;
         case 'order':
             {
-
+                let _M = _module.toUpperCase();
+                return (_action = '') => (status = '') => ({
+                    type: ORDER_CONSTS[`${_M}_${_action.toUpperCase()}_STATUS_CHANGE`],
+                    status,
+                });
             }
             break;
         default:
             {
-                throw new Error('Unknown module');
+                throw new Error('Unknown status change event');
             }
     }
 }
 
 // new user manage module
+// 2018-04-23 v1.0
 function PushContentToUserStore(content) {
     return {
         type: USER_CONSTS.PUSH_CONTENT_TO_USER_STORE,
@@ -187,11 +314,14 @@ export function UserPageChange(diff) {
         diff,
     }
 }
+
 export function FetchUser(pageNo = 1, pageSize = 10) {
+    console.log('fetching page ', pageNo);
     return (dispatch, getState) => {
         dispatch(StatusChangeGenerator('user')('fetch')(COMMON_STATUS.PENDING));
         if (ENVIRONMENT === 'dev') {
             setTimeout(() => {
+                message.success('成功获取用户列表', .5);
                 dispatch(StatusChangeGenerator('user')('fetch')(COMMON_STATUS.RESOLVED));
                 dispatch(PushContentToUserStore({
                     dataList: fakeUserData((pageNo - 1) * 10, pageNo * 10),
@@ -199,13 +329,36 @@ export function FetchUser(pageNo = 1, pageSize = 10) {
                     pageNo,
                 }));
             }, 500);
-        } else if (ENVIRONMENT === 'prod') {
-
+        } else {
+            fetch('/admin/user/query', {
+                    method: 'post',
+                    body: JSON.stringify({
+                        pageNo,
+                        pageSize
+                    }),
+                    ...COMMON_FETCH_OPTIONS,
+                })
+                .then(res => res.json())
+                .then(res => {
+                    if (res.code === '1') {
+                        message.success('成功获取用户列表', .5);
+                        dispatch(StatusChangeGenerator('user')('fetch')(COMMON_STATUS.RESOLVED));
+                        dispatch(PushContentToUserStore(res.content));
+                    } else {
+                        message.error('获取用户列表失败，请重试', .5);
+                        dispatch(StatusChangeGenerator('user')('fetch')(COMMON_STATUS.REJECTED));
+                    }
+                })
+                .catch(err => {
+                    message.error('获取用户列表失败，请重试', .5);
+                    dispatch(StatusChangeGenerator('user')('fetch')(COMMON_STATUS.REJECTED));
+                });
         }
     }
 }
 
 // new admin manage module
+// 2018-04-23 v1.0
 function AdminFetchStatusChange(status) {
     return {
         type: ADMIN_CONSTS.ADMIN_FETCH_STATUS_CHANGE,
@@ -245,15 +398,38 @@ export function FetchAdminData(pageNo = 1, pageSize = 10) {
         dispatch(AdminFetchStatusChange(COMMON_STATUS.PENDING));
         if (ENVIRONMENT === 'dev') {
             setTimeout(() => {
+                message.success('成功获取管理员列表', .5);
                 dispatch(AdminFetchStatusChange(COMMON_STATUS.RESOLVED));
                 dispatch(AdminPushDataToStore({
-                    total: 50,
+                    totalCount: 50,
                     dataList: fakeAdminData((pageNo - 1) * 10, pageNo * 10),
                     pageNo,
                 }));
             }, 500);
-        } else if (ENVIRONMENT === 'prod') {
-
+        } else {
+            fetch('/admin/query', {
+                    method: 'post',
+                    body: JSON.stringify({
+                        pageNo,
+                        pageSize
+                    }),
+                    ...COMMON_FETCH_OPTIONS,
+                })
+                .then(res => res.json())
+                .then(res => {
+                    if (res.code === '1') {
+                        message.success('成功获取管理员列表', .5);
+                        dispatch(AdminFetchStatusChange(COMMON_STATUS.RESOLVED));
+                        dispatch(AdminPushDataToStore(res.content));
+                    } else {
+                        message.error('获取管理员列表失败，请重试', .5);
+                        dispatch(AdminFetchStatusChange(COMMON_STATUS.REJECTED));
+                    }
+                })
+                .catch(err => {
+                    message.error('获取管理员列表失败，请重试', .5);
+                    dispatch(AdminFetchStatusChange(COMMON_STATUS.REJECTED));
+                });
         }
     }
 }
@@ -263,11 +439,32 @@ export function SubmitAdmin(data, pageNo) {
         dispatch(AdminSubmitStatusChange(COMMON_STATUS.PENDING));
         if (ENVIRONMENT === 'dev') {
             setTimeout(() => {
+                message.success('成功添加管理员', .5);
                 dispatch(AdminSubmitStatusChange(COMMON_STATUS.RESOLVED));
                 dispatch(FetchAdminData(pageNo));
             }, 500);
-        } else if (ENVIRONMENT === 'prod') {
-
+        } else {
+            fetch('/admin/insert', {
+                    body: JSON.stringify(data),
+                    method: 'post',
+                    ...COMMON_FETCH_OPTIONS,
+                })
+                .then(res => res.json())
+                .then(res => {
+                    if (res.code === '1') {
+                        message.success('成功添加管理员', .5);
+                        dispatch(AdminSubmitStatusChange(COMMON_STATUS.RESOLVED));
+                        dispatch(FetchAdminData(pageNo));
+                    } else {
+                        message.error('添加管理员失败', .5);
+                        dispatch(AdminSubmitStatusChange(COMMON_STATUS.REJECTED));
+                    }
+                })
+                .catch(err => {
+                    message.error('添加管理员失败', .5);
+                    dispatch(AdminSubmitStatusChange(COMMON_STATUS.REJECTED));
+                    console.log(err);
+                });
         }
     }
 }
@@ -277,11 +474,31 @@ export function UpdateAdmin(data, pageNo) {
         dispatch(AdminUpdateStatusChange(COMMON_STATUS.PENDING));
         if (ENVIRONMENT === 'dev') {
             setTimeout(() => {
+                message.success('成功注销管理员', .5);
                 dispatch(AdminUpdateStatusChange(COMMON_STATUS.RESOLVED));
                 dispatch(FetchAdminData(pageNo));
             }, 500);
-        } else if (ENVIRONMENT === 'prod') {
-
+        } else {
+            fetch('/admin/logout_admin', {
+                    method: 'post',
+                    body: JSON.stringify(data),
+                    ...COMMON_FETCH_OPTIONS,
+                })
+                .then(res => res.json())
+                .then(res => {
+                    if (res.code === '1') {
+                        message.success('成功注销管理员', .5);
+                        dispatch(AdminUpdateStatusChange(COMMON_STATUS.RESOLVED));
+                        dispatch(FetchAdminData(pageNo));
+                    } else {
+                        message.error('注销管理员失败，请重试', .5);
+                        dispatch(AdminUpdateStatusChange(COMMON_STATUS.REJECTED));
+                    }
+                })
+                .catch(err => {
+                    message.error('注销管理员失败，请重试', .5);
+                    dispatch(AdminUpdateStatusChange(COMMON_STATUS.REJECTED));
+                });
         }
     }
 }

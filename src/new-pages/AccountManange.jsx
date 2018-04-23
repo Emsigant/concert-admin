@@ -9,16 +9,19 @@ class AddForm extends Component {
         this.state = {
             newPhone: '',
             newPassword: '',
+            nickname: '',
+            valid: false,
             t1: false,
             t2: false,
+            t3: false,
         }
     }
     showWarningSpan(condition) {
         return condition ? <span className='red-span'>不可为空</span> : null;
     }
     formValidate() {
-        let { newPassword, t2, newPhone, t1 } = this.state;
-        return newPassword !== '' && t2 && t1 && newPhone !== '';
+        let { newPassword, t2, newPhone, t1, nickname, t3, valid, } = this.state;
+        return newPassword !== '' && t2 && t1 && newPhone !== '' && t3 && nickname && valid;
     }
     onChange(e) {
         let target = e.target.dataset.target,
@@ -27,16 +30,22 @@ class AddForm extends Component {
             this.setState({
                 newPhone: value,
                 t1: true,
+                valid: /^1\d{10}$/.test(value),
             })
-        } else {
+        } else if (target === 'password') {
             this.setState({
                 newPassword: value,
                 t2: true,
             })
+        } else {
+            this.setState({
+                nickname: value,
+                t3: true,
+            })
         }
     }
     render() {
-        let { newPassword, t2, newPhone, t1 } = this.state;
+        let { newPassword, t2, newPhone, t1, t3, nickname, valid, } = this.state;
         return (
             <div>
                 <Input
@@ -48,6 +57,9 @@ class AddForm extends Component {
                 {
                     this.showWarningSpan(newPhone === '' && t1)
                 }
+                {
+                    !valid && t1 ? <span className='red-span'>格式不正确</span> : null
+                }
                 <Input
                     prefix={<Icon type='lock' />}
                     style={{ marginTop: '1rem' }}
@@ -58,14 +70,25 @@ class AddForm extends Component {
                 {
                     this.showWarningSpan(newPassword === '' && t2)
                 }
+                <Input
+                    prefix={<Icon type='user' />}
+                    style={{ marginTop: '1rem' }}
+                    placeholder='昵称'
+                    data-target='nickname'
+                    onChange={(e) => { this.onChange(e) }}
+                />
+                {
+                    this.showWarningSpan(nickname === '' && t3)
+                }
                 <br />
                 <Button
                     type='primary'
                     style={{ marginTop: '1rem' }}
                     onClick={() => {
                         this.props.dispatch(SubmitAdmin({
-                            phone: newPhone,
-                            password: newPassword,
+                            phone: '' + newPhone,
+                            password: '' + newPassword,
+                            nickname: '' + nickname,
                         }, this.props.pageNo))
                         this.props.closeModal();
                     }}
@@ -121,9 +144,10 @@ class AccountManage extends Component {
                         columns={
                             [
                                 { title: '管理员账号', dataIndex: 'phone', key: 'phone' },
+                                { title: '昵称', dataIndex: 'nickName', key: 'nickName' },
                                 {
                                     title: '状态', dataIndex: 'status', key: 'status', render: (text, record) => (
-                                        <div>{record.status === '0' ? '正常' : '已注销'}</div>
+                                        <div>{text === '0' ? '正常' : '已注销'}</div>
                                     )
                                 },
                                 {
@@ -132,7 +156,7 @@ class AccountManage extends Component {
                                             {record.status === '1' ?
                                                 null :
                                                 <Button size='small' type='danger'
-                                                    onClick={() => { dispatch(UpdateAdmin({ ...record, status: '1', }, page)) }}
+                                                    onClick={() => { dispatch(UpdateAdmin({ phone: '' + record.phone }, page)) }}
                                                 >注销</Button>}
                                         </div>
                                     )
@@ -146,6 +170,7 @@ class AccountManage extends Component {
                                 current: page,
                                 showQuickJumper: true,
                                 onChange: (targetPage, pageSize) => {
+                                    window.scrollTo(0, 0);
                                     dispatch(AdminPageChange(targetPage - page));
                                     dispatch(FetchAdminData(targetPage));
                                 }
@@ -165,6 +190,7 @@ let mapStateToProps = state => {
         total: state.Admin.total,
         fetchDataStatus: state.Admin.fetchDataStatus,
         submitDataStatus: state.Admin.submitDataStatus,
+        updateDataStatus: state.Admin.updateDataStatus,
     }
 }
 

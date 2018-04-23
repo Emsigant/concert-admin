@@ -11,12 +11,34 @@ export const USER_CONSTS = {
     USER_FETCH_STATUS_CHANGE: '2',
     USER_PAGE_CHANGE: '3',
 };
-export const PRODUCT_CONSTS = {};
-export const BUSINESS_CONSTS = {};
-export const ORDER_CONSTS = {};
+export const PRODUCT_CONSTS = {
+
+};
+export const BUSINESS_CONSTS = {
+    PUSH_BUSINESS_CONTENT_TO_STORE: 'B1',
+    BUSINESS_PAGE_CHANGE: 'B2',
+    BUSINESS_FETCH_STATUS_CHANGE: 'B3',
+    BUSINESS_CHANGE_FILTER: 'B4',
+    PUSH_WITHDRAW_CONTENT_TO_STORE: 'W1',
+    WITHDRAW_PAGE_CHANGE: 'W2',
+    WITHDRAW_FETCH_STATUS_CHANGE: 'W3',
+};
+export const ORDER_CONSTS = {
+    PUSH_ORDER_CONTENT_TO_STORE: 'ORDER1',
+    ORDER_PAGE_CHNAGE: 'ORDER2',
+    ORDER_FETCH_STATUS_CHANGE: 'ORDER3',
+};
+
 export const COMMON_STATUS = {
     PENDING: 'pending',
     RESOLVED: 'resolved',
     REJECTED: 'rejected',
     INTI: 'init',
 };
+
+// const name style:
+/**
+ * PUSH_MODULE_CONTENT_TO_STORE, 
+ * MODULE_PAGE_CHANGE, 
+ * MODULE_ACTION_STATUS_CHANGE,
+ */

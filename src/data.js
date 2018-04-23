@@ -1,3 +1,4 @@
+import cimage from "./c.jpg";
 export function fakeUserData(start = 0, end = 10) {
     let arr = [];
     let cityArr = ['北京', '上海', '广州', '深圳', '天津', '重庆', '成都', '杭州', '南京', '武汉', '西安', '大连', '青岛'];
@@ -5,11 +6,9 @@ export function fakeUserData(start = 0, end = 10) {
     for (let i = start; i < end; i++) {
         let random = ~~(Math.random() * cityLen);
         arr.push({
-            key: ['user-', ('100000' + (i < 10 ? '0' : '') + i)].join(''),
             userId: '100000' + (i < 10 ? '0' : '') + i,
-            username: 'user' + i,
-            phoneNumber: '12345678901',
-            city: cityArr[random],
+            nickName: 'user' + i,
+            phone: '12345678901',
             country: '中国'
         })
     }
@@ -33,36 +32,33 @@ export function fakeFetchOrderData(start = 0, end = 10) {
     return fakeOrderData;
 }
 
-const fakeEncashData = [];
-for (let i = 0; i < 30; i++) {
-    fakeEncashData.push({
-        key: ['encash-record-', ('10000' + (i < 10 ? '0' + i : i))].join(''),
-        encashId: '10000' + (i < 10 ? '0' + i : i),
-        encashStartTime: '2018-03-21',
-        encashStarterId: '1000000001',
-        encashAmount: '￥10000',
-        encashDestAccount: '2000001',
-        encashDestAccountName: 'someone',
-        encashStatus: 'pending'
-    })
+
+export function fakeFetchEncashRecord(start = 0, end = 10) {
+    let fakeEncashData = [];
+    for (let i = start; i < end; i++) {
+        fakeEncashData.push({
+            "amount": 2014,
+            "bankCardNo": "",
+            "bankName": "",
+            "createTime": 1523867180000,
+            "status": "0",
+            "userName": "wxn",
+            "withdrawOrderId": "WI0000000008" + i,
+        })
+    }
+    return fakeEncashData;
 }
 
-export function fakeFetchBusinessData(start = 0, end = 10) {
+export function fakeFetchBusinessData(start = 0, end = 10, statusFilter = '0') {
     let fakeBusinessData = [];
     for (let i = start; i < end; i++) {
         fakeBusinessData.push({
-            key: ['business-', ('10000000000' + (i < 10 ? '0' + i : i))].join(''),
-            businessId: '10000000000' + (i < 10 ? '0' + i : i),
-            businessReviewStatus: ['失败', '通过', '审核中'][i % 3],
-            reveiwStatusCode: i % 3,
-            businessName: '商家' + i,
-            businessEncashAccount: ~~(Math.random() * 1000000),
-            businessEncashAccountName: 'account-name',
-            businessEncashRecords: fakeEncashData.map(item => ({
-                ...item,
-                encashStarterId: '10000000000' + (i < 10 ? '0' + i : i)
-            })),
-            businessReviewFile: 'review file'
+            userId: '10000000000' + (i < 10 ? '0' + i : i),
+            authImageUrl: cimage,
+            userName: '商家名称' + i,
+            bankCardNo: '1000000' + i,
+            status: statusFilter, // '0'认证中 '1'认证通过 '2'认证失败，
+            bankName: "中国工商银行",
         })
     }
     return fakeBusinessData;
@@ -100,6 +96,7 @@ export function fakeAdminData(start = 0, end = 10) {
             userId: `UI0000${i}`,
             phone: `1234567890${i}`,
             status: '' + (i % 2), // '0' for normal, '1' for non-used
+            nickName: 'nickname',
         })
     }
     return arr;

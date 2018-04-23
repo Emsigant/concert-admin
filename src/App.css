@@ -331,6 +331,27 @@ select {
     margin-bottom: 1rem;
     display: flex;
 }
+
 .red-span {
     color: red;
+}
+
+.filter-select-wrapper {
+    position: relative;
+    display: flex;
+    align-items: center;
+    margin-bottom: 1rem;
+}
+
+.filter-select {
+    height: 2rem;
+    line-height: 2rem;
+    box-sizing: border-box;
+    border-bottom: 2px solid transparent;
+    margin-right: 1rem;
+    cursor: pointer;
+}
+
+.filter-select-active {
+    border-bottom: 2px solid #333;
 }

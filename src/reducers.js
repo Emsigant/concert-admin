@@ -5,7 +5,7 @@ import {
     message
 } from 'antd';
 import {
-    combineReducers
+    combineReducers,
 } from 'redux';
 import {
     UserConsts,
@@ -63,41 +63,38 @@ function User(state, action) {
 // order module
 function Order(state, action) {
     switch (action.type) {
-        case OrderConsts.ORDER_DATA:
+        case ORDER_CONSTS.PUSH_ORDER_CONTENT_TO_STORE:
             {
                 return {
                     ...state,
-                    data: action.data
+                    pageNo: action.content.pageNo,
+                    pageSize: action.content.pageSize,
+                    totalCount: action.content.totalCount,
                 }
             }
-        case OrderConsts.ORDER_PAGE:
+            break;
+        case ORDER_CONSTS.ORDER_PAGE_CHNAGE:
             {
                 return {
                     ...state,
-                    totalPage: action.totalPage
+                    pageNo: state.pageNo + action.diff,
                 }
             }
-        case OrderConsts.ORDER_PAGE_CHANGE:
-            {
-                let page = state.page + action.step
-                return {
-                    ...state,
-                    page
-                }
-            }
-        case OrderConsts.ORDER_CLEAR:
+            break;
+        case ORDER_CONSTS.ORDER_FETCH_STATUS_CHANGE:
             {
                 return {
                     ...state,
-                    data: []
+                    fetchStatus: action.status,
                 }
             }
         default:
             {
                 return {
-                    page: 1,
-                    totalPage: 20,
-                    data: []
+                    pageNo: 1,
+                    totalCount: 1,
+                    dataList: [],
+                    fetchStatus: 'init',
                 }
             }
     }
@@ -105,42 +102,71 @@ function Order(state, action) {
 
 function Business(state, action) {
     switch (action.type) {
-        case BusinessConsts.BUSINESS_DATA:
+        case BUSINESS_CONSTS.PUSH_BUSINESS_CONTENT_TO_STORE:
             {
                 return {
                     ...state,
-                    data: action.data
+                    dataList: action.content.dataList,
+                    pageNo: action.content.pageNo,
+                    totalCount: action.content.totalCount,
                 }
             }
-        case BusinessConsts.BUSINESS_PAGE:
+        case BUSINESS_CONSTS.BUSINESS_CHANGE_FILTER:
             {
                 return {
                     ...state,
-                    totalPage: action.totalPage
+                    statusFilter: action.statusFilter,
                 }
             }
-        case BusinessConsts.BUSINESS_PAGE_CHANGE:
+        case BUSINESS_CONSTS.BUSINESS_FETCH_STATUS_CHANGE:
             {
-                let page = state.page + action.step
                 return {
                     ...state,
-                    page
+                    fetchStatus: action.status,
                 }
             }
-        case BusinessConsts.BUSINESS_CLEAR:
+        case BUSINESS_CONSTS.BUSINESS_PAGE_CHANGE:
             {
                 return {
                     ...state,
-                    data: []
+                    pageNo: state.pageNo + action.diff,
+                }
+            }
+        case BUSINESS_CONSTS.WITHDRAW_PAGE_CHANGE:
+            {
+                return {
+                    ...state,
+                    recordPageNo: state.recordPageNo + action.diff,
+                }
+            }
+        case BUSINESS_CONSTS.PUSH_WITHDRAW_CONTENT_TO_STORE:
+            {
+                return {
+                    ...state,
+                    recordData: action.content.dataList,
+                    recordPageNo: action.content.pageNo,
+                    recordTotalCount: action.content.totalCount,
+                }
+            }
+        case BUSINESS_CONSTS.WITHDRAW_FETCH_STATUS_CHANGE:
+            {
+                return {
+                    ...state,
+                    recordFetchStatus: action.status,
                 }
             }
         default:
             {
                 return {
-                    page: 1,
-                    totalPage: 30,
-                    data: [],
-                    encashRecords: []
+                    pageNo: 1,
+                    totalCount: 1,
+                    dataList: [],
+                    fetchStatus: 'init',
+                    statusFilter: '0',
+                    recordData: [],
+                    recordPageNo: 1,
+                    recordTotalCount: 1,
+                    recordFetchStatus: 'init',
                 }
             }
     }
@@ -195,7 +221,7 @@ function Admin(state, action) {
                 return {
                     ...state,
                     data: action.content.dataList,
-                    total: action.content.total,
+                    total: action.content.totalCount,
                     page: action.content.pageNo,
                 }
             }
