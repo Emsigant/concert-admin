@@ -55,13 +55,13 @@ class ProductManage extends Component {
                                     }}>上架</Button>
                                 )
                             },
-                            {
-                                title: '下架', render: (text, record) => (
-                                    <Button size='small' type='danger' onClick={() => {
-                                        dispatch(OffShelfProduct(record.showId, '0', 'extra', pageNo));
-                                    }}>下架</Button>
-                                )
-                            },
+                            // {
+                            //     title: '下架', render: (text, record) => (
+                            //         <Button size='small' type='danger' onClick={() => {
+                            //             dispatch(OffShelfProduct(record.showId, '0', 'extra', pageNo));
+                            //         }}>下架</Button>
+                            //     )
+                            // },
                         ]
                     }
                     dataSource={dataList}

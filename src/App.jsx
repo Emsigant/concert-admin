@@ -35,7 +35,7 @@ class App extends Component {
         { id: 2, text: '订单管理', to: '/order', path: '/order', c: OrderManage },
         { id: 3, text: '商品管理', to: '/product', path: '/product', c: ProductManage },
         { id: 4, text: '商家管理', to: '/business', path: '/business', c: BusinessManage },
-        { id: 5, text: '账号管理', to: '/account', path: '/account', c: AccountManage },
+        // { id: 5, text: '账号管理', to: '/account', path: '/account', c: AccountManage },
       ]
     };
   }
@@ -57,7 +57,7 @@ class App extends Component {
                 <div style={{ position: 'absolute', bottom: '1rem', right: '1rem', left: '1rem' }}>
                   <span style={{ cursor: 'pointer' }}
                     onClick={() => {
-                      fetch('/admim/logout', {
+                      fetch('/admin/logout', {
                         credentials: 'include',
                         headers: {
                           'Content-Type': 'application/json',
