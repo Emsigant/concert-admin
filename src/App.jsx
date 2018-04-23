@@ -3,7 +3,7 @@ import { HashRouter, Route, NavLink, Switch } from 'react-router-dom';
 import { Provider } from 'react-redux';
 import { createStore, applyMiddleware } from 'redux';
 import thunk from 'redux-thunk';
-import { LocaleProvider } from 'antd';
+import { LocaleProvider, Icon, message, } from 'antd';
 import moment from 'moment';
 
 import zh_CN from 'antd/lib/locale-provider/zh_CN';
@@ -18,7 +18,7 @@ import Welcome from './new-pages/Welcome';
 import UserManage from './new-pages/UserManage.jsx';
 import OrderManage from './new-pages/OrderManage.jsx';
 import BusinessManage from './new-pages/BusinessManage.jsx';
-import ProductManage from './new-pages/ProductManange';
+import ProductManage from './new-pages/ProductManange.jsx';
 import AccountManage from './new-pages/AccountManange.jsx';
 
 moment.locale('zh_cn');
@@ -54,6 +54,33 @@ class App extends Component {
                     </li>
                   ))}
                 </ul>
+                <div style={{ position: 'absolute', bottom: '1rem', right: '1rem', left: '1rem' }}>
+                  <span style={{ cursor: 'pointer' }}
+                    onClick={() => {
+                      fetch('/admim/logout', {
+                        credentials: 'include',
+                        headers: {
+                          'Content-Type': 'application/json',
+                        },
+                      })
+                        .then(res => res.json())
+                        .then(res => {
+                          if (res.code === '1') {
+                            window.location.href = '/admin';
+                          } else {
+                            message.error('退出登录失败，请重试', .5);
+                          }
+                        })
+                        .catch(err => {
+                          message.error('退出登录失败，请重试', .5);
+                        });
+                    }}
+                  >
+                    <Icon type='logout' style={{ color: '#fff', marginRight: '.5rem' }} />
+                    退出登录
+                </span>
+
+                </div>
               </div>
               <div className="content">
                 <Switch>

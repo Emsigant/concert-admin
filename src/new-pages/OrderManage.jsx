@@ -6,12 +6,16 @@ import { FetchOrder, OrderPageChange } from '../actions';
 import { FormatTime } from "../util";
 
 const mapCodeToStatus = {
-    '0': '',
-    '1': '',
-    '2': '',
-    '3': '',
-    '4': '',
-    '5': '',
+    '0': '初始化订单',
+    '1': '已付款',
+    '2': '已出票',
+    '3': '未出票已过期',
+    '4': '取消交易',
+    '5': '退款申请中',
+    '6': '退款申请不通过',
+    '7': '退款中',
+    '8': '退款成功',
+    '9': '退款失败',
 };
 
 class OrderManage extends Component {
@@ -32,7 +36,7 @@ class OrderManage extends Component {
                             { title: '演出开始时间', key: 'startTime', dataIndex: 'startTime', render: (text, reocrd) => (FormatTime(text)) },
                             { title: '演出类型', key: 'typeName', dataIndex: 'typeName', },
                             { title: '订单总金额(元)', key: 'orderTotalAmount', dataIndex: 'orderTotalAmount', render: (text, record) => (+text / 100) },
-                            { title: '订单状态', key: 'status', dataIndex: 'status', },
+                            { title: '订单状态', key: 'status', dataIndex: 'status', render: (text, record) => (mapCodeToStatus[text]) },
                             { title: '演出地址', key: 'address', dataIndex: 'address', },
                         ]
                     }

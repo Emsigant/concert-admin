@@ -17,6 +17,7 @@ import {
     message,
 } from "antd";
 
+const _jsstr = JSON.stringify;
 const ENVIRONMENT = 'prod';
 const COMMON_FETCH_OPTIONS = {
     credentials: 'include',
@@ -43,7 +44,7 @@ export function FetchOrder(pageNo = 1, pageSize = 10) {
     return (dispatch, getState) => {
         fetch('/admin/client/query/order', {
                 method: 'post',
-                body: JSON.stringify({
+                body: _jsstr({
                     pageNo,
                     pageSize
                 }),
@@ -210,41 +211,129 @@ export function FetchWithdraw(pageNo = 1, pageSize = 10, userId) {
     }
 }
 
-// product module
-export const ProductConsts = {
-    PRODUCT_DATA: 'PRODUCT_DATA',
-    PRODUCT_PAGE: 'PRODUCT_PAGE',
-    PRODUCT_PAGE_CHANGE: 'PRODUCT_PAGE_CHANGE',
-    PRODUCT_CLEAR: 'PRODUCT_CLEAR'
-}
-export function productData(data) {
+// new product module
+// a1
+function PushProductContentToStore(content) {
     return {
-        type: ProductConsts.PRODUCT_DATA,
-        data
+        type: PRODUCT_CONSTS.PUSH_PRODUCT_CONTENT_TO_STORE,
+        content,
     }
 }
-export function fetchProductData(data, timeout = 500) {
+// a2
+export function ProductPageChange(diff) {
+    return {
+        type: PRODUCT_CONSTS.PRODUCT_PAGE_CHANGE,
+        diff,
+    }
+}
+
+export function FetchProduct(pageNo = 1, pageSize = 10) {
     return (dispatch, getState) => {
-        setTimeout(() => {
-            dispatch(productData(data));
-        }, timeout);
+        fetch('/admin/query/product', {
+                method: 'post',
+                body: _jsstr({
+                    pageNo,
+                    pageSize,
+                }),
+                ...COMMON_FETCH_OPTIONS,
+            })
+            .then(res => res.json())
+            .then(res => {
+                if (res.code === '1') {
+                    message.success('成功获取商品基本信息列表', .5);
+                    dispatch(PushProductContentToStore(res.content));
+                } else {
+                    message.error('获取信息失败，请重试', .5);
+                }
+            })
+            .catch(err => {
+                message.error('获取信息失败，请重试', .5);
+            });
     }
 }
-export function productPage(totalPage) {
+// a3
+function PushDetailContentToStore(content) {
     return {
-        type: ProductConsts.PRODUCT_PAGE,
-        totalPage
+        type: PRODUCT_CONSTS.PUSH_DETAIL_CONTENT_TO_STORE,
+        content,
     }
 }
-export function productPageChange(step) {
-    return {
-        type: ProductConsts.PRODUCT_PAGE_CHANGE,
-        step
+export function FetchDetail(showId) {
+    return (dispatch, getState) => {
+        dispatch(PushDetailContentToStore({
+            dataList: [],
+        }));
+        fetch('/admin/query/product/detail', {
+                method: 'post',
+                body: _jsstr({
+                    showId,
+                }),
+                ...COMMON_FETCH_OPTIONS,
+            })
+            .then(res => res.json())
+            .then(res => {
+                if (res.code === '1') {
+                    message.success('成功获取详细信息', .5);
+                    dispatch(PushDetailContentToStore(res.content));
+                } else {
+                    message.error('获取详细信息失败，请重试', .5);
+                }
+            })
+            .catch(err => {
+                message.error('获取详细信息失败，请重试', .5);
+            });
     }
 }
-export function productClear() {
-    return {
-        type: ProductConsts.PRODUCT_CLEAR
+
+export function ShelfProduct(showId, shelfStatus = '2', extra = 'extra', pageNo) {
+    return (dispatch, getState) => {
+        fetch('/admin/show/shelf', {
+                method: 'post',
+                body: _jsstr({
+                    showId,
+                    shelfStatus,
+                    extra,
+                }),
+                ...COMMON_FETCH_OPTIONS,
+            })
+            .then(res => res.json())
+            .then(res => {
+                if (res.code === '1') {
+                    message.success('上架成功', .5);
+                    dispatch(FetchProduct(pageNo));
+                } else {
+                    message.success('上架失败，请重试', .5);
+                }
+            })
+            .catch(err => {
+                message.success('上架失败，请重试', .5);
+            });
+    }
+}
+
+export function OffShelfProduct(showId, shelfStatus = '0', extra = 'extra', pageNo) {
+    return (dispatch, getState) => {
+        fetch('/admin/show/offshelf', {
+                method: 'post',
+                body: _jsstr({
+                    showId,
+                    shelfStatus,
+                    extra,
+                }),
+                ...COMMON_FETCH_OPTIONS,
+            })
+            .then(res => res.json())
+            .then(res => {
+                if (res.code === '1') {
+                    message.success('下架成功', .5);
+                    dispatch(FetchProduct(pageNo));
+                } else {
+                    message.success('下架失败，请重试', .5);
+                }
+            })
+            .catch(err => {
+                message.success('下架失败，请重试', .5);
+            });
     }
 }
 

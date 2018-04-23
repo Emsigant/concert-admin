@@ -163,41 +163,36 @@ function Business(state, action) {
 
 function Product(state, action) {
     switch (action.type) {
-        case ProductConsts.PRODUCT_DATA:
+        case PRODUCT_CONSTS.PRODUCT_PAGE_CHANGE:
             {
                 return {
                     ...state,
-                    data: action.data
+                    pageNo: state.pageNo + action.diff,
                 }
             }
-        case ProductConsts.PRODUCT_PAGE:
+        case PRODUCT_CONSTS.PUSH_PRODUCT_CONTENT_TO_STORE:
             {
                 return {
                     ...state,
-                    totalPage: action.totalPage
+                    pageNo: action.content.pageNo,
+                    totalCount: action.content.totalCount,
+                    dataList: action.content.dataList,
                 }
             }
-        case ProductConsts.PRODUCT_PAGE_CHANGE:
-            {
-                let page = state.page + action.step
-                return {
-                    ...state,
-                    page
-                }
-            }
-        case ProductConsts.PRODUCT_CLEAR:
+        case PRODUCT_CONSTS.PUSH_DETAIL_CONTENT_TO_STORE:
             {
                 return {
                     ...state,
-                    data: []
+                    detailDataList: action.content.dataList,
                 }
             }
         default:
             {
                 return {
-                    page: 1,
-                    totalPage: 10,
-                    data: []
+                    pageNo: 1,
+                    totalCount: 1,
+                    dataList: [],
+                    detailDataList: [],
                 }
             }
     }
