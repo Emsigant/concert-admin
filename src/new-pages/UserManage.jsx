@@ -25,7 +25,8 @@ class UserManage extends Component {
                 dispatch(FetchUser(targetPage));
             },
             total: totalCount,
-            showQuickJumper: true,
+            showQuickJumper: !0,
+            hideOnSinglePage: !0,
         };
         return (
             <div className='route'>

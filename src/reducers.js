@@ -63,16 +63,6 @@ function User(state, action) {
 // order module
 function Order(state, action) {
     switch (action.type) {
-        case ORDER_CONSTS.PUSH_ORDER_CONTENT_TO_STORE:
-            {
-                return {
-                    ...state,
-                    pageNo: action.content.pageNo,
-                    pageSize: action.content.pageSize,
-                    totalCount: action.content.totalCount,
-                }
-            }
-            break;
         case ORDER_CONSTS.ORDER_PAGE_CHNAGE:
             {
                 return {
@@ -80,12 +70,12 @@ function Order(state, action) {
                     pageNo: state.pageNo + action.diff,
                 }
             }
-            break;
-        case ORDER_CONSTS.ORDER_FETCH_STATUS_CHANGE:
+        case ORDER_CONSTS.PUSH_ORDER_CONTENT_TO_STORE:
             {
                 return {
-                    ...state,
-                    fetchStatus: action.status,
+                    pageNo: action.content.pageNo,
+                    totalCount: action.content.totalCount,
+                    dataList: action.content.dataList,
                 }
             }
         default:
@@ -94,7 +84,6 @@ function Order(state, action) {
                     pageNo: 1,
                     totalCount: 1,
                     dataList: [],
-                    fetchStatus: 'init',
                 }
             }
     }

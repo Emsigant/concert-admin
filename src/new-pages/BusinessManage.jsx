@@ -80,7 +80,7 @@ class BusinessManage extends Component {
 						statusArr.map(item => (
 							<div
 								key={'filter-select' + item.statusCode}
-								className={"filter-select" + ' ' + (statusFilter === item.statusCode ? 'filter-select-active' : '')}
+								className={"filter-select" + (statusFilter === item.statusCode ? ' filter-select-active' : '')}
 								onClick={() => {
 									dispatch(BusinessChangeFilter(item.statusCode))
 									dispatch(FetchBusiness(1, 10, item.statusCode));
@@ -114,12 +114,12 @@ class BusinessManage extends Component {
 							}
 						},
 						{
-							title: '提现记录', render: (text, record) => (<a onClick={() => {
+							title: '提现记录', render: (text, record) => (record.status === '1' ? <a onClick={() => {
 								this.setState({
 									showRecordModal: true,
 									userId: record.userId,
 								})
-							}}>查看提现记录</a>)
+							}}>查看提现记录</a> : '不可用')
 						},
 						{
 							title: '操作', render: (text, record) => {
@@ -166,6 +166,11 @@ class BusinessManage extends Component {
 										<Button disabled size='small'>不可操作</Button>
 								)
 							}
+						},
+						{
+							title: '不通过原因', key: 'extra', dataIndex: 'extra', render: (text, record) => (
+								<div>{record.status !== '2' ? '-' : text}</div>
+							)
 						}
 					]}
 					pagination={{

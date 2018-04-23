@@ -17,7 +17,7 @@ import {
     message,
 } from "antd";
 
-const ENVIRONMENT = 'dev';
+const ENVIRONMENT = 'prod';
 const COMMON_FETCH_OPTIONS = {
     credentials: 'include',
     headers: {
@@ -25,14 +25,13 @@ const COMMON_FETCH_OPTIONS = {
     },
 };
 
-// order module
+// new order module
 function PushOrderContentToStore(content) {
     return {
         type: ORDER_CONSTS.PUSH_ORDER_CONTENT_TO_STORE,
         content,
     }
 }
-
 export function OrderPageChange(diff) {
     return {
         type: ORDER_CONSTS.ORDER_PAGE_CHNAGE,
@@ -40,21 +39,28 @@ export function OrderPageChange(diff) {
     }
 }
 
-export function FetchOrder(pageNo = 1, pageSize = 10, statusFilter = '0') {
+export function FetchOrder(pageNo = 1, pageSize = 10) {
     return (dispatch, getState) => {
-        dispatch(StatusChangeGenerator('order')('fetch')(COMMON_STATUS.PENDING))
-        if (ENVIRONMENT === 'dev') {
-            setTimeout(() => {
-                dispatch(StatusChangeGenerator('order')('fetch')(COMMON_STATUS.RESOLVED));
-                dispatch(PushOrderContentToStore({
-                    totalCount: 50,
+        fetch('/admin/client/query/order', {
+                method: 'post',
+                body: JSON.stringify({
                     pageNo,
-                    dataList: [],
-                }))
-            }, 500);
-        } else {
-
-        }
+                    pageSize
+                }),
+                ...COMMON_FETCH_OPTIONS,
+            })
+            .then(res => res.json())
+            .then(res => {
+                if (res.code === '1') {
+                    message.success('获取信息成功', .5);
+                    dispatch(PushOrderContentToStore(res.content));
+                } else {
+                    message.error('获取信息失败，请重试', .5);
+                }
+            })
+            .catch(err => {
+                message.error('获取信息失败，请重试', .5);
+            });
     }
 }
 
