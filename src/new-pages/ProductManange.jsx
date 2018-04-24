@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import { Table, Modal, Button } from 'antd';
 
-import { ProductPageChange, FetchProduct, FetchDetail, ShelfProduct, OffShelfProduct, } from '../actions';
+import { ProductPageChange, FetchProduct, FetchDetail, ShelfProduct, OffShelfProduct, ModifyProductStatus, } from '../actions';
 import { FormatTime } from '../util';
 
 const mapCodeToStatus = {
@@ -10,7 +10,15 @@ const mapCodeToStatus = {
     '1': '审核中',
     '2': '已上架',
     '3': '审核不通过',
-}
+};
+
+const _mapCodeToStatus = {
+    '0': '不展示',
+    '1': '普通展示',
+    '2': '首页推荐',
+    '3': '小编推荐',
+    '4': '首页+小编',
+};
 
 class ProductManage extends Component {
     constructor(props) {
@@ -38,6 +46,7 @@ class ProductManage extends Component {
                             { title: '演出地址', key: 'address', dataIndex: 'address' },
                             { title: '剧院名称', key: 'theaterName', dataIndex: 'theaterName' },
                             { title: '上架状态', key: 'shelfStatus', dataIndex: 'shelfStatus', render: (text) => (mapCodeToStatus[text]) },
+                            { title: '展示状态', key: 'status', dataIndex: 'status', render: (text) => (_mapCodeToStatus[text]) },
                             {
                                 title: '查看详细', render: (text, record) => (
                                     <a onClick={() => {
@@ -55,13 +64,43 @@ class ProductManage extends Component {
                                     }}>上架</Button>
                                 )
                             },
-                            // {
-                            //     title: '下架', render: (text, record) => (
-                            //         <Button size='small' type='danger' onClick={() => {
-                            //             dispatch(OffShelfProduct(record.showId, '0', 'extra', pageNo));
-                            //         }}>下架</Button>
-                            //     )
-                            // },
+                            {
+                                title: '下架', render: (text, record) => (
+                                    <Button size='small' type='danger' onClick={() => {
+                                        dispatch(OffShelfProduct(record.showId, '0', 'extra', pageNo));
+                                    }}>下架</Button>
+                                )
+                            },
+                            {
+                                title: '首页推荐', render: (text, record) => (
+                                    <Button size='small' onClick={() => {
+                                        if (record.status === '1') {
+                                            dispatch(ModifyProductStatus(record.showId, '2', pageNo));
+                                        } else if (record.status === '2') {
+                                            dispatch(ModifyProductStatus(record.showId, '1', pageNo));
+                                        } else if (record.status === '4') {
+                                            dispatch(ModifyProductStatus(record.showId, '3', pageNo));
+                                        } else if (record.status === '3') {
+                                            dispatch(ModifyProductStatus(record.showId, '4', pageNo));
+                                        }
+                                    }}>{record.status === '2' || record.status === '4' ? '取消' : '首页推荐'}</Button>
+                                )
+                            },
+                            {
+                                title: '小编精选', render: (text, record) => (
+                                    <Button size='small' onClick={() => {
+                                        if (record.status === '1') {
+                                            dispatch(ModifyProductStatus(record.showId, '3', pageNo));
+                                        } else if (record.status === '3') {
+                                            dispatch(ModifyProductStatus(record.showId, '1', pageNo));
+                                        } else if (record.status === '4') {
+                                            dispatch(ModifyProductStatus(record.showId, '2', pageNo));
+                                        } else if (record.status === '2') {
+                                            dispatch(ModifyProductStatus(record.showId, '4', pageNo));
+                                        }
+                                    }}>{record.status === '3' || record.status === '4' ? '取消' : '小编推荐'}</Button>
+                                )
+                            },
                         ]
                     }
                     dataSource={dataList}

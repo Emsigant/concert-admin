@@ -337,6 +337,39 @@ export function OffShelfProduct(showId, shelfStatus = '0', extra = 'extra', page
     }
 }
 
+export function ModifyProductStatus(showId, status = '', pageNo) {
+    return (dispatch, getState) => {
+        fetch('/admin/show/modify/', {
+                method: 'post',
+                body: _jsstr({
+                    showId,
+                    status,
+                }),
+                ...COMMON_FETCH_OPTIONS,
+            })
+            .then(res => res.json())
+            .then(res => {
+                if (res.code === '1') {
+                    if (status === '4') {
+                        message.success('已设为 首页+小编推荐', .5);
+                    } else if (status === '2') {
+                        message.success('已设为 首页推荐', .5);
+                    } else if (status === '3') {
+                        message.success('已设为 小编推荐', .5);
+                    } else if (status === '1') {
+                        message.success('已设为 普通展示', .5);
+                    }
+                    dispatch(FetchProduct(pageNo));
+                } else {
+                    message.error('修改状态失败，请重试', .5);
+                }
+            })
+            .catch(err => {
+                message.error('修改状态失败，请重试', .5);
+            })
+    }
+}
+
 // common status change function
 // StatusChangeGenerator('admin')('fetch')(status) 
 // => { type:ADMIN_CONST['ADMIN_FETCH_STATUS_CHANGE'], status }
