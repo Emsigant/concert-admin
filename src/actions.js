@@ -18,7 +18,7 @@ import {
 } from "antd";
 
 const _jsstr = JSON.stringify;
-const ENVIRONMENT = 'prod';
+const ENVIRONMENT = 'dev';
 const COMMON_FETCH_OPTIONS = {
     credentials: 'include',
     headers: {
